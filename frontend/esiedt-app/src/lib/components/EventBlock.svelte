@@ -35,7 +35,7 @@
             {/if}
         </div>
         
-        {#if blockHeight > 75}
+        {#if blockHeight > 95}
             <!-- Mode Colonne (Par défaut, quand l'espace le permet) -->
             <div class="flex min-w-0 flex-col gap-0.5 font-body text-sm text-ink/70">
                 {#if event.location}<span class="break-words">{event.location}</span>{/if}
