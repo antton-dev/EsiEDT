@@ -10,6 +10,7 @@ export interface ScheduleResponse {
     status: string;
     resource_id: string;
     total_events: number;
+    fetched_at: string;
     events: ScheduleEvent[];
 }
 

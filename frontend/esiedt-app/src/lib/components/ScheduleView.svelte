@@ -5,6 +5,7 @@
 	import { groupEventsByDay, formatDayLabel, toDateKey, type DayGroup } from '$lib/utils/schedule';
 	import DayNavigator from './DayNavigator.svelte';
 	import DayTimeline from './DayTimeline.svelte';
+	import Footer from './Footer.svelte';
 
 	let { resourceId }: { resourceId: string } = $props();
 
@@ -14,7 +15,9 @@
 	let error = $state('');
 	let now = $state(new Date());
 	let nowTimer: ReturnType<typeof setInterval>;
-
+	
+	let fetchedAt = $state<string | null>(null);
+	
 	onMount(() => {
 		load();
 		const debugDate = dev ? new URLSearchParams(window.location.search).get('debugDate') : null;
@@ -36,6 +39,7 @@
 		error = '';
 		try {
 			const data = await fetchSchedule(resourceId);
+			fetchedAt = data.fetched_at;
 			days = groupEventsByDay(data.events);
 
 			const debugDate = dev ? new URLSearchParams(window.location.search).get('debugDate') : null;
@@ -81,6 +85,8 @@
 			</h2>
 			<DayTimeline events={selectedDay.events} day={selectedDay.date} {now} />
 		</div>
+
+		<Footer compact {fetchedAt} />
 
 		<div class="fixed inset-x-0 bottom-0 border-t border-lilac/30 bg-white/95 p-4 backdrop-blur">
 			<div class="mx-auto flex max-w-md items-center gap-3">

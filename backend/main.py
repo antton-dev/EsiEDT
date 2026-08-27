@@ -5,15 +5,40 @@ from icalendar import Calendar
 from fastapi import FastAPI, HTTPException
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
-from fastapi_cache.decorator import cache
+# from fastapi_cache.decorator import cache
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import json
 import re
-from datetime import datetime 
+from datetime import datetime, timezone
+
+load_dotenv()
+
+# -- Global variables --
+CATEGORY_ORDER = [
+    "1A Prépa",
+    "2A Prépa",
+    "1A Ingé Etu",
+    "1A Ingé App",
+    "2A Ingé Etu",
+    "2A Ingé App",
+    "3A Ingé Etu",
+    "3A Ingé App",
+]
+
+SHORT_NAME_PREFIX_ORDER = ["TP", "Gr", "Pr"]
+
+LAST_GOOD_RESPONSE: dict[str, dict] = {}
+CACHE_DURATION_SECONDS = 10
+
+SIMULATE_ADE_DOWN = False
+
+FIXTURE_MODE = os.getenv("FIXTURE_MODE", "false") == "true"
+FIXTURE_ICS_PATH = "ADECal.ics"
+
+
 
 # -- BDD des groupes --
-
 try: 
     with open("resources.json", "r", encoding="utf-8") as f:
         RESOURCES_DB = json.load(f)
@@ -44,18 +69,7 @@ def parse_ics(ics_data: bytes):
     
     return events
 
-CATEGORY_ORDER = [
-    "1A Prépa",
-    "2A Prépa",
-    "1A Ingé Etu",
-    "1A Ingé App",
-    "2A Ingé Etu",
-    "2A Ingé App",
-    "3A Ingé Etu",
-    "3A Ingé App",
-]
 
-SHORT_NAME_PREFIX_ORDER = ["TP", "Gr", "Pr"]
 
 def short_name_sort_key(short_name):
     match = re.match(r"([A-Za-zÀ-ÿ]+)(\d+)", short_name)
@@ -93,7 +107,6 @@ def clean_description(description: str):
 
     return prof_name
 
-load_dotenv()
 app = FastAPI(title="EsiEDT")
 
 # -- CORS config --
@@ -114,15 +127,38 @@ async def startup():
     FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
     
 @app.get("/api/schedule/{resource_id}")
-@cache(expire=7200)
+# @cache(expire=10)
 async def get_schedule(resource_id: str):
     USERNAME = os.getenv("AGALAN_USERNAME", "wrong username")
     PASSWORD = os.getenv("AGALAN_PASSWORD", "wrong password")
 
+    cached = LAST_GOOD_RESPONSE.get(resource_id)
+    now = datetime.now().timestamp()
+
+    if cached and (now - cached["fetched_at"]) < CACHE_DURATION_SECONDS:
+        return cached['data']
+
+    # ICS local
+    if FIXTURE_MODE:
+        with open(FIXTURE_ICS_PATH, "rb") as f:
+            ics_content = f.read()
+
+        structured_data = parse_ics(ics_content)
+        result = {
+            "status": "success",
+            "resource_id": resource_id,
+            "total_events": len(structured_data),
+            "fetched_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(),
+            "events": structured_data
+        }
+        LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
+        return result
+
+
     month = datetime.now().month
     year = datetime.now().year - 1 if month < 8 else datetime.now().year
-
-    ADE_URL = f"https://edt.grenoble-inp.fr/directCal/{year}-{year+1}/etudiant/esisar?resources={resource_id}&startDay=31&startMonth=08&startYear={year}&endDay=31&endMonth=07&endYear={year+1}"
+    params = "resourcess" if SIMULATE_ADE_DOWN else "resources" # USEFUL FOR DEBUG AND SIMULATE ADE DOWN
+    ADE_URL = f"https://edt.grenoble-inp.fr/directCal/{year}-{year+1}/etudiant/esisar?{params}={resource_id}&startDay=31&startMonth=08&startYear={year}&endDay=31&endMonth=07&endYear={year+1}"
     
     
     async with httpx.AsyncClient(follow_redirects=True) as client:
@@ -130,25 +166,32 @@ async def get_schedule(resource_id: str):
             response = await client.get(ADE_URL, auth=(USERNAME, PASSWORD))
             
             if response.status_code == 401:
-                raise HTTPException(status_code=401, detail="Identifiants refusés")
+                raise HTTPException(status_code=401, detail="401 : Identifiants refusés, envoyez un mail à contact@anttonc.fr")
             elif response.status_code != 200:
                 print(f"Erreur ADE: {response.status_code} - {response.text}")
-                raise HTTPException(status_code=502, detail="ADE est encore en panne :(")
+                if cached:
+                    return cached["data"]
+                raise HTTPException(status_code=502, detail="502 : ADE est encore en panne :(")
             
             ics_content = response.content
-
             structured_data = parse_ics(ics_content)
 
-
-            return {
+            result = {
                 "status": "success",
                 "resource_id": resource_id,
                 "total_events": len(structured_data),
+                "fetched_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(),
                 "events": structured_data
             }
 
+            LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
+            return result 
+
         except httpx.RequestError:
-            raise HTTPException(status_code=503, detail="ADE est en grève :(")
+            if cached:
+                return cached["data"]
+
+            raise HTTPException(status_code=503, detail="503 : ADE est en grève :(")
         
 
 @app.get("/api/search")
@@ -248,3 +291,15 @@ async def get_grouped_resources():
         "categories_count": len(final_data),
         "data": final_data
     }
+
+# /!\ FOR TEST AND LOCAL DEVELOPMENT ONLY /!\
+# DO NOT EXPOSE THIS ROUTE ON PROD
+
+# @app.post("/debug/toogle-ade-down")
+# async def toogle_ade_down():
+#     """
+#     Cette route permet de simuler ADE en panne en corrompant l'url, pour tester la robustesse du système de cache
+#     """
+#     global SIMULATE_ADE_DOWN
+#     SIMULATE_ADE_DOWN = not SIMULATE_ADE_DOWN
+#     return {"simulate_ade_down": SIMULATE_ADE_DOWN}

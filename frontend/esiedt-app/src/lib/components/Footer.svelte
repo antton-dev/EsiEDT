@@ -1,5 +1,8 @@
 <script lang="ts">
-	let { compact = false }: { compact?: boolean } = $props();
+	import { formatDateTime } from '$lib/utils/schedule';
+
+	let { compact = false, fetchedAt = null }: { compact?: boolean; fetchedAt?: string | null } =
+		$props();
 </script>
 
 <footer
@@ -8,5 +11,10 @@
 	class:pb-6={!compact}
 >
 	<p>Données ADE mises en cache toutes les 2h</p>
+	<p>
+		{#if fetchedAt}
+			Dernière synchronisation avec ADE :  <span class="font-mono">{formatDateTime(fetchedAt)}</span>
+		{/if}
+	</p>
 	<p class="mt-0.5">Fait par <a href="https://anttonc.fr" target="_blank" rel="noopener noreferrer" class="font-semibold text-signal underline decoration-signal/30 underline-offset-2">anttonc.fr</a></p>
 </footer>

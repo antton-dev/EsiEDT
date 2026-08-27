@@ -46,6 +46,15 @@ export function formatDayShort(date: Date): string {
 	return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
+export function formatDateTime(iso: string): string {
+	return new Date(iso).toLocaleString('fr-FR', {
+		day: 'numeric',
+		month: 'short',
+		hour: '2-digit',
+		minute: "2-digit"
+	})
+}
+
 // --- Nouveau pour la frise chronologique ---
 
 export function minutesSinceMidnight(iso: string): number {
