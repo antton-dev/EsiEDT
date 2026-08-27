@@ -21,4 +21,4 @@ services:
 networks:
   caddy_net:
     external: true
-    name: caddy # Tapez "docker network ls" pour vérifier le nom réel du réseau utilisé par votre proxy
+    name: caddy_net
