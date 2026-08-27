@@ -43,7 +43,7 @@ export function formatDayLabel(date: Date): string {
 }
 
 export function formatDayShort(date: Date): string {
-	return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' });
+	return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
 // --- Nouveau pour la frise chronologique ---

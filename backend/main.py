@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import json
 import re
+from datetime import datetime 
 
 # -- BDD des groupes --
 
@@ -118,8 +119,10 @@ async def get_schedule(resource_id: str):
     USERNAME = os.getenv("AGALAN_USERNAME", "wrong username")
     PASSWORD = os.getenv("AGALAN_PASSWORD", "wrong password")
 
+    month = datetime.now().month
+    year = datetime.now().year - 1 if month < 8 else datetime.now().year
 
-    ADE_URL = f"https://edt.grenoble-inp.fr/directCal/2026-2027/etudiant/esisar?resources={resource_id}"
+    ADE_URL = f"https://edt.grenoble-inp.fr/directCal/{year}-{year+1}/etudiant/esisar?resources={resource_id}&startDay=31&startMonth=08&startYear={year}&endDay=31&endMonth=07&endYear={year+1}"
     
     
     async with httpx.AsyncClient(follow_redirects=True) as client:
