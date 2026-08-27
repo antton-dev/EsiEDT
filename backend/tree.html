@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<!--
+Specification-Title: ADE
+Specification-Version:
+Specification-Vendor: ADESOFT
+Implementation-Version: 6.16 r768
+Implementation-Vendor: ADESOFT
+Since:
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<HTML>
+<HEAD>
+	<LINK rel="stylesheet" type="text/css" title="defaultStyle" href="/2026-2027/esisar/etudiant/jsp/interface.css">
+	<SCRIPT language=javascript>
+		function getCurrentPos()
+		{
+			if (document.all)
+				currentpos=document.body.scrollTop
+			else
+				currentpos=window.pageYOffset
+			return currentpos;
+		}
+		
+		function checkCategory(participantType)
+		{
+			var currentpos = getCurrentPos();
+			document.location='tree.jsp?selectCategory='+participantType+'&scroll='+currentpos;
+		}
+		function checkBranch(participantId, reset)
+		{
+			var currentpos = getCurrentPos();
+			document.location='tree.jsp?selectBranchId='+participantId+'&reset='+reset+'&forceLoad=false&scroll='+currentpos;
+		}
+		function check(participantId, reset)
+		{
+			var currentpos = getCurrentPos();	
+			document.location='tree.jsp?selectId='+participantId+'&reset='+reset+'&forceLoad=false&scroll='+currentpos;
+		}
+		function openBranch(participantId)
+		{
+			var currentpos = getCurrentPos();
+			document.location='tree.jsp?branchId='+participantId+'&expand=false&forceLoad=false&reload=false&scroll='+currentpos;
+		}
+		function openCategory(participantType)
+		{
+			var currentpos = getCurrentPos();
+			document.location='tree.jsp?category='+participantType+'&expand=false&forceLoad=false&reload=false&scroll='+currentpos;
+		}
+	</SCRIPT>
+</HEAD>
+
+<BODY onload="scrollwindow()" class="lightbackground">
+<SCRIPT language="javascript">
+	function scrollwindow()
+	{
+	
+		window.scroll(0,374);
+	}
+	function Ouvre(s)
+	{
+		pop_win = window.open(s,"Reponse","toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=1,resizable=1,width=750,height=480, top=100, left=300");
+		pop_win.focus() ;
+	}
+	function OpenSmallWindow(s, nbFields)
+	{
+		var valHeight = 170*nbFields;
+		var parameters = "toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=0,resizable=0,width=480, height="+valHeight+", top=200, left=400";
+		pop_win = window.open(s,"Reponse",parameters);
+		pop_win.focus() ;
+	}
+</SCRIPT>
+
+<div class="maintree">
+<div class="treetitle">RECHERCHE</div>
+		<form method=POST name=search action=tree.jsp>
+		<div class="treeinput"><input type="text" name="search" value="">
+		<a href="javascript:document.search.submit()"><img src="/2026-2027/esisar/etudiant/jsp/img/jumelles_icon.gif" alt="Recherche rapide"></a>
+		<a href="javascript:Ouvre('search.jsp?isDirect=true')"><img src="/2026-2027/esisar/etudiant/jsp/img/chevrons_icon.gif" alt="Recherche avancé..."></a>
+		</div>
+	<div class="treetitle">LISTE DES RESSOURCES</div>
+	<DIV class="treeline"><a href="javascript:openCategory('trainee')"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('trainee')">Etudiants</a></SPAN></DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(3)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(3, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(3, 'true')">Esisar</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8707)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8707, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8707, 'true')">1 - Premier Cycle</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8715)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8715, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8715, 'true')">1A-Prépa</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8801)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8801, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8801, 'true')">1A-Prépa-TD1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8804, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8804, 'true');">1A-Prépa-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8803, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8803, 'true');">1A-Prépa-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8717)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8717, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8717, 'true')">1A-Prépa-TD2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8720, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8720, 'true');">1A-Prépa-TP3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8719, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8719, 'true');">1A-Prépa-TP4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8708)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8708, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8708, 'true')">2A-Prépa</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8709)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8709, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8709, 'true')">2A-Prépa-TD1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8710, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8710, 'true');">2A-Prépa-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8711, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8711, 'true');">2A-Prépa-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(8712)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(8712, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(8712, 'true')">2A-Prépa-TD2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8713, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8713, 'true');">2A-Prépa-TP3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(8714, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(8714, 'true');">2A-Prépa-TP4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(13959, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(13959, 'true');">AHN1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(9080, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(9080, 'true');">SHN1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(2683)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(2683, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(2683, 'true')">2 - Cycle Ingénieur - Etudiant</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5931)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5931, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5931, 'true')">1A - Ingénieur - Etudiant</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5932)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5932, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5932, 'true')">1A-Ingé-Etu-S5</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5934, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5934, 'true');">1A-Ingé-Etu-S5-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5933, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5933, 'true');">1A-Ingé-Etu-S5-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5938, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5938, 'true');">1A-Ingé-Etu-S5-TP3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5937, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5937, 'true');">1A-Ingé-Etu-S5-TP4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5936, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5936, 'true');">1A-Ingé-Etu-S5-TP5</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5935, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5935, 'true');">1A-Ingé-Etu-S5-TP6</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5939)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5939, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5939, 'true')">1A-Ingé-Etu-S6</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5940)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5940, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5940, 'true')">1A-Ingé-Etu-S6-Projet</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5945, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5945, 'true');">1A-Ingé-Etu-Pr1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5944, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5944, 'true');">1A-Ingé-Etu-Pr2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5942, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5942, 'true');">1A-Ingé-Etu-Pr3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5941, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5941, 'true');">1A-Ingé-Etu-Pr4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5961, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5961, 'true');">1A-Ingé-Etu-S6-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5960, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5960, 'true');">1A-Ingé-Etu-S6-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5947, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5947, 'true');">1A-Ingé-Etu-S6-TP3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5946, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5946, 'true');">1A-Ingé-Etu-S6-TP4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5959, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5959, 'true');">1A-Ingé-Etu-S6-TP5</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5955, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5955, 'true');">1A-Ingé-Etu-S6-TP6</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5359)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5359, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5359, 'true')">2A - Ingénieur - Etudiant</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5897)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5897, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5897, 'true')">2A-Ingé-Etu-S7</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5926, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5926, 'true');">2A-Ingé-Etu-S7-Gr1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5927, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5927, 'true');">2A-Ingé-Etu-S7-Gr2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5923, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5923, 'true');">2A-Ingé-Etu-S7-Gr3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5924, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5924, 'true');">2A-Ingé-Etu-S7-Gr4</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5819)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5819, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5819, 'true')">2A-Ingé-Etu-S8</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5825, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5825, 'true');">2A-Ingé-Etu-S8-Gr1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5831, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5831, 'true');">2A-Ingé-Etu-S8-Gr2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5832, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5832, 'true');">2A-Ingé-Etu-S8-Gr3</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(16835)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(16835, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(16835, 'true')">3A - Ingénieur - Etudiant</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(6975)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(6975, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(6975, 'true')">3A-Ingé-Etu-S9</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6979, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6979, 'true');">3A-Ingé-Etu-S9-S2C</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6980, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6980, 'true');">3A-Ingé-Etu-S9-SEC</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6983, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6983, 'true');">3A-Ingé-Etu-S9-SES</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6984, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6984, 'true');">3A-Ingé-Etu-S9-SIS</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5962)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5962, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5962, 'true')">3 - Cycle Ingénieur - Apprenti</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5966)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5966, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5966, 'true')">1A - Ingénieur - Apprenti</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5967, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5967, 'true');">1A-Ingé-App-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5968, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5968, 'true');">1A-Ingé-App-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(5963)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(5963, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(5963, 'true')">2A - Ingénieur - Apprenti</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5964, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5964, 'true');">2A-Ingé-App-TP1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(5965, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(5965, 'true');">2A-Ingé-App-TP2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(16834)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(16834, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(16834, 'true')">3A - Ingénieur - Apprenti</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(6997)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(6997, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(6997, 'true')">3A-Ingé-App-S9</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(7041, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(7041, 'true');">3A-Ingé-App-S9-S2C</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(7000, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(7000, 'true');">3A-Ingé-App-S9-SEC</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(7040, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(7040, 'true');">3A-Ingé-App-S9-SES</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6998, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6998, 'true');">3A-Ingé-App-S9-SIS</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(6993)"><img src="/2026-2027/esisar/etudiant/jsp/img/moins.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(6993, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(6993, 'true')">4 - Master 2 - IMESS</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6994, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6994, 'true');">M2-IMESS-Gr1</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/2026-2027/esisar/etudiant/jsp/img/blankTree.gif" width="11" height="11">
+				<SPAN CLASS="treecross"><a href="javascript:check(6996, 'false');"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>&nbsp;
+				<SPAN CLASS="treeitem"><a href="javascript:check(6996, 'true');">M2-IMESS-Gr2</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(1595)"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(1595, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(1595, 'true')">S.mart</a></SPAN>
+				</DIV><DIV class="treeline">&nbsp;&nbsp;&nbsp;<a href="javascript:openBranch(6685)"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a>
+				<SPAN CLASS="treecross"><a href="javascript:checkBranch(6685, 'false')"><img src="/2026-2027/esisar/etudiant/jsp/img/smallplus.gif"></a></SPAN>
+				<SPAN class="treebranch"><a href="javascript:checkBranch(6685, 'true')">~ Etudiants multi-écoles</a></SPAN>
+				</DIV><DIV class="treeline"><a href="javascript:openCategory('instructor')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('instructor')">Intervenants (accès restreint)</a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('room')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('room')">Salles</a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('resource')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('resource')">Equipements</a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('category5')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('category5')">Enseignements</a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('category6')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('category6')">Autres</a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('category7')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('category7')">Autres (accès restreint) </a></SPAN></DIV><DIV class="treeline"><a href="javascript:openCategory('category8')"><img src="/2026-2027/esisar/etudiant/jsp/img/plus.gif"></a><SPAN CLASS="treecategory"><a href="javascript:checkCategory('category8')">Categorie8</a></SPAN></DIV></div></form>
+<script>var _paq = window._paq = window._paq || [];_paq.push(['trackPageView']);_paq.push(['enableLinkTracking']);(function() {var u='https://matomo.grenoble-inp.fr/';_paq.push(['setTrackerUrl', u+'matomo.php']);_paq.push(['setSiteId', '43']);var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);})();</script></body>
+</HTML>

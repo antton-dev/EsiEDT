@@ -1,0 +1,78 @@
+
+> esiedt-app@0.0.1 build
+> vite build
+
+vite v8.2.2 building ssr environment for production...
+transforming...
+✓ 160 modules transformed.
+rendering chunks...
+vite v8.2.2 building client environment for production...
+transforming...
+✓ 170 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/client/_app/version.json                        0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/manifest.webmanifest                     0.44 kB
+.svelte-kit/output/client/.vite/manifest.json                      3.25 kB │ gzip:  0.65 kB
+.svelte-kit/output/client/_app/immutable/assets/0.CvaRo5XJ.css    12.87 kB │ gzip:  3.42 kB
+.svelte-kit/output/client/_app/immutable/chunks/xihTtKlq.js        0.06 kB │ gzip:  0.08 kB
+.svelte-kit/output/client/_app/immutable/entry/start.BrsVpcIa.js   0.07 kB │ gzip:  0.08 kB
+.svelte-kit/output/client/_app/immutable/nodes/0.BuPznanr.js       0.54 kB │ gzip:  0.34 kB
+.svelte-kit/output/client/_app/immutable/nodes/1.DOmZuiqV.js       0.59 kB │ gzip:  0.33 kB
+.svelte-kit/output/client/_app/immutable/chunks/CnXBU88d.js        1.11 kB │ gzip:  0.58 kB
+.svelte-kit/output/client/_app/immutable/chunks/HclGiUj8.js        1.21 kB │ gzip:  0.67 kB
+.svelte-kit/output/client/_app/immutable/chunks/Bjy-W4x2.js        1.36 kB │ gzip:  0.65 kB
+.svelte-kit/output/client/_app/immutable/entry/app.Bl6189pY.js     2.83 kB │ gzip:  1.27 kB
+.svelte-kit/output/client/_app/immutable/chunks/Bd17z0YL.js        5.65 kB │ gzip:  2.20 kB
+.svelte-kit/output/client/_app/immutable/nodes/2.NsCX7eIm.js       7.61 kB │ gzip:  3.03 kB
+.svelte-kit/output/client/_app/immutable/chunks/BsFa9Fja.js       26.64 kB │ gzip: 10.29 kB
+.svelte-kit/output/client/_app/immutable/chunks/CIQTjMp7.js       41.07 kB │ gzip: 15.84 kB
+
+✓ built in 203ms
+computing gzip size...
+.svelte-kit/output/server/.vite/manifest.json                           3.67 kB │ gzip:  0.67 kB
+.svelte-kit/output/server/_app/immutable/assets/_layout.CnybVLUb.css   12.51 kB │ gzip:  3.41 kB
+.svelte-kit/output/server/env.js                                        0.22 kB │ gzip:  0.14 kB
+.svelte-kit/output/server/entries/pages/_layout.svelte.js               0.28 kB │ gzip:  0.20 kB
+.svelte-kit/output/server/chunks/env.js                                 0.28 kB │ gzip:  0.17 kB
+.svelte-kit/output/server/internal.js                                   0.40 kB │ gzip:  0.19 kB
+.svelte-kit/output/server/chunks/internal.js                            0.74 kB │ gzip:  0.34 kB
+.svelte-kit/output/server/entries/pages/_page.svelte.js                 1.42 kB │ gzip:  0.58 kB
+.svelte-kit/output/server/chunks/virtual_pwa-register.js                2.37 kB │ gzip:  0.81 kB
+.svelte-kit/output/server/entries/fallbacks/error.svelte.js             4.21 kB │ gzip:  1.66 kB
+.svelte-kit/output/server/chunks/index-server.js                        4.53 kB │ gzip:  1.68 kB
+.svelte-kit/output/server/chunks/workbox-window.prod.es5.js             7.40 kB │ gzip:  2.60 kB
+.svelte-kit/output/server/chunks/exports.js                             9.01 kB │ gzip:  2.96 kB
+.svelte-kit/output/server/chunks/shared.js                             10.57 kB │ gzip:  3.38 kB
+.svelte-kit/output/server/chunks/internal2.js                          21.42 kB │ gzip:  6.59 kB
+.svelte-kit/output/server/chunks/utils.js                              31.77 kB │ gzip:  9.35 kB
+.svelte-kit/output/server/remote-entry.js                              54.49 kB │ gzip: 12.02 kB
+.svelte-kit/output/server/index.js                                    126.05 kB │ gzip: 31.93 kB
+.svelte-kit/output/server/chunks/server.js                            128.08 kB │ gzip: 33.27 kB
+
+✓ built in 2.06s
+
+PWA v1.3.0
+mode      generateSW
+precache  16 entries (109.09 KiB)
+files generated
+  .svelte-kit/output/server/sw.js
+  .svelte-kit/output/server/workbox-bdb082da.js
+
+
+warnings
+  One of the glob patterns doesn't match any files. Please remove or fix the following: {
+  "globDirectory": "/home/antton/Documents/dev-perso/ade-remix/frontend2/esiedt-app/.svelte-kit/output",
+  "globPattern": "prerendered/**/*.{html,json}",
+  "globIgnores": [
+    "server/**",
+    "server/sw.js",
+    "server/workbox-*.js"
+  ]
+}
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-auto
+  Could not detect a supported production environment. See https://svelte.dev/docs/kit/adapters to learn how to configure your app to run on the platform of your choosing
+  ✔ done
