@@ -13,4 +13,4 @@
 </script>
 
 {@render children()}
-<!-- <InstallButton /> -->
+<InstallButton />
