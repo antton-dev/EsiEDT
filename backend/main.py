@@ -81,7 +81,7 @@ def short_name_sort_key(short_name):
     if prefix in SHORT_NAME_PREFIX_ORDER:
         prefix_rank = SHORT_NAME_PREFIX_ORDER.index(prefix)
     else:
-        prefix_rank = len(SHORT_NAME_PREFIX_ORDER)  # préfixe inconnu → après les connus
+        prefix_rank = len(SHORT_NAME_PREFIX_ORDER)
 
     return (prefix_rank, number)
 
@@ -238,16 +238,14 @@ async def get_grouped_resources():
             parts = full_name.split('-')
             year = parts[0]
             status = parts[2]
-            category = f"{year} Ingé {status}"  # une seule catégorie, peu importe le cas
+            category = f"{year} Ingé {status}"
 
             if "-Pr" in full_name:
-            	# Groupes de projet : pas de semestre dans le nom, on garde tel quel
             	short_name = parts[-1]
             elif len(parts) > 3 and parts[3].startswith('S') and parts[3][1:].isdigit():
             	# 4ème partie = un semestre (ex: 'S5', 'S9') → on l'ignore
             	short_name = "-".join(parts[4:])
             else:
-            	# Pas de semestre (ex: 'TP1' pour les Apprentis) → on le garde
             	short_name = "-".join(parts[3:])
                           
         elif "-Prépa" in full_name:
@@ -259,29 +257,25 @@ async def get_grouped_resources():
             category = "Autres"
             short_name = full_name
             
-        # Initialisation de la catégorie si elle n'existe pas
         if category not in temp_categories:
             temp_categories[category] = {}
             
-        # Initialisation du groupe s'il n'existe pas
         if short_name not in temp_categories[category]:
             temp_categories[category][short_name] = {
                 "full_name": f"{category} - {short_name}",
                 "short_name": short_name,
-                "ids": [] # On utilise une liste pour stocker plusieurs IDs !
+                "ids": [] 
             }
             
-        # On ajoute l'identifiant au groupe
         temp_categories[category][short_name]["ids"].append(resource_id)
         
     # Formatage final et tri
     final_data = {}
     for cat, groups in sorted(temp_categories.items(), key=lambda item: category_sort_key(item[0])):
         formatted_groups = []
-        for short_name, data in sorted(groups.items(), key=lambda item: short_name_sort_key(item[0])):            # On transforme la liste d'IDs en une chaîne séparée par des virgules
-            # ex: ["5934", "5961"] -> "5934,5961"
+        for short_name, data in sorted(groups.items(), key=lambda item: short_name_sort_key(item[0])): 
             data["id"] = ",".join(data["ids"])
-            del data["ids"] # Nettoyage de la liste temporaire
+            del data["ids"] 
             formatted_groups.append(data)
             
         final_data[cat] = formatted_groups
