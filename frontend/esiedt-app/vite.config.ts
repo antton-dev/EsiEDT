@@ -31,7 +31,7 @@ export default defineConfig({
 				name: "EsiEDT",
 				short_name: "EsiEDT",
 				description: "Emploi du temps pour l'Esisar, par et pour les étudiants",
-				theme_color: "#2563eb",
+				theme_color: "#6d28d9;",
 				background_color: "#ffffff",
 				display: "standalone",
 				start_url: "/",
