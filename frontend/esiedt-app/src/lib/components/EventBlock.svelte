@@ -27,9 +27,9 @@
 >
     <div class="flex h-full flex-col">
         <div class="flex items-center justify-between gap-2">
-            <h3 class="truncate font-display text-xl font-bold text-ink">{event.title}</h3>
+            <h3 class="truncate font-display text-md font-bold text-ink">{event.title}</h3>
             {#if event.start_time && event.end_time}
-                <span class="shrink-0 font-mono text-sm font-medium text-signal">
+                <span class="shrink-0 font-mono text-xs font-medium text-signal">
                     {formatTime(event.start_time)}–{formatTime(event.end_time)}
                 </span>
             {/if}
