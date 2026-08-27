@@ -243,7 +243,6 @@ async def get_grouped_resources():
             if "-Pr" in full_name:
             	short_name = parts[-1]
             elif len(parts) > 3 and parts[3].startswith('S') and parts[3][1:].isdigit():
-            	# 4ème partie = un semestre (ex: 'S5', 'S9') → on l'ignore
             	short_name = "-".join(parts[4:])
             else:
             	short_name = "-".join(parts[3:])
