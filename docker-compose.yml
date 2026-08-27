@@ -3,16 +3,22 @@ services:
     build: ./frontend/esiedt-app
     container_name: esiedt_frontend
     restart: unless-stopped
-    ports:
-      - "3000:80" # Nginx expose sur le port 80 en interne, relié au 3000 de votre VPS
+    # Plus besoin d'exposer les ports à la machine hôte
     depends_on:
       - backend
+    networks:
+      - caddy_net # À remplacer par le nom exact de votre réseau Caddy
 
   backend:
     build: ./backend
     container_name: esiedt_backend
     restart: unless-stopped
-    ports:
-      - "8000:8000"
     env_file:
       - ./backend/.env
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+    external: true
+    name: caddy # Tapez "docker network ls" pour vérifier le nom réel du réseau utilisé par votre proxy
