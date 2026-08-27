@@ -114,7 +114,7 @@ async def startup():
     FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
     
 @app.get("/api/schedule/{resource_id}")
-# @cache(expire=7200)
+@cache(expire=7200)
 async def get_schedule(resource_id: str):
     USERNAME = os.getenv("AGALAN_USERNAME", "wrong username")
     PASSWORD = os.getenv("AGALAN_PASSWORD", "wrong password")
