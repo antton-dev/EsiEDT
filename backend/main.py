@@ -139,20 +139,20 @@ async def get_schedule(resource_id: str):
         return cached['data']
 
     # ICS local
-    # if FIXTURE_MODE:
-    #     with open(FIXTURE_ICS_PATH, "rb") as f:
-    #         ics_content = f.read()
+    if FIXTURE_MODE:
+        with open(FIXTURE_ICS_PATH, "rb") as f:
+            ics_content = f.read()
 
-    #     structured_data = parse_ics(ics_content)
-    #     result = {
-    #         "status": "success",
-    #         "resource_id": resource_id,
-    #         "total_events": len(structured_data),
-    #         "fetched_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(),
-    #         "events": structured_data
-    #     }
-    #     LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
-    #     return result
+        structured_data = parse_ics(ics_content)
+        result = {
+            "status": "success",
+            "resource_id": resource_id,
+            "total_events": len(structured_data),
+            "fetched_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(),
+            "events": structured_data
+        }
+        LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
+        return result
 
 
     month = datetime.now().month

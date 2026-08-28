@@ -1,11 +1,18 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
 	--color-ink: #2e1065;
 	--color-signal: #6d28d9;
 	--color-lilac: #c4b5fd;
 	--color-mist: #f5f3fb;
 	--color-coral: #f0653e;
+
+	--color-ink-dark: #ede9f7;
+	--color-mist-dark: #181025;
+	--color-surface-dark: #241a35;
+	--color-lilac-dark: #d8cffa;
 
 	--font-display: 'Space Grotesk', sans-serif;
 	--font-body: 'Manrope', sans-serif;
@@ -16,4 +23,9 @@ body {
 	background-color: var(--color-mist);
 	color: var(--color-ink);
 	font-family: var(--font-body);
+}
+
+.dark body {
+	background-color: var(--color-mist-dark);
+	color: var(--color-ink-dark);
 }

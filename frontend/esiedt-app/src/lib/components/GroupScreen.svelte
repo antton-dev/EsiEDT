@@ -3,6 +3,9 @@
 	import Footer from './Footer.svelte';
 	import type { ResourceGroup } from '$lib/types';
 
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
 	let {
 		categoryName,
 		groups,
@@ -28,7 +31,7 @@
 			class="flex h-9 w-9 items-center justify-center rounded-full text-signal transition active:bg-lilac/30"
 			aria-label="Retour"
 		>
-			←
+			<FontAwesomeIcon icon={faArrowLeft} class="mx-1"/>
 		</button>
 		<h1 class="font-display text-2xl font-bold text-ink">{categoryName}</h1>
 	</div>

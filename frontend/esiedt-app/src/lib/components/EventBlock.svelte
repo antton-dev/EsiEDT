@@ -40,8 +40,8 @@
 		<div class="flex items-center justify-between gap-2">
 			<h3
 				class="truncate font-display font-bold text-ink"
-				class:text-md={isTiny}
-				class:text-l={!isTiny}
+				class:text-sm={isTiny}
+				class:text-base={!isTiny}
 			>
 				{event.title}
 			</h3>

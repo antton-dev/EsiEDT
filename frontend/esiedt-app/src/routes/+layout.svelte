@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { applyTheme } from '$lib/stores/theme.svelte';
 	import { browser } from '$app/environment';
-	import './layout.css'; // garde cette ligne si elle existe déjà (import Tailwind)
+	import './layout.css'; 
 	import InstallButton from '$lib/components/InstallButton.svelte';
 
 	let { children } = $props();

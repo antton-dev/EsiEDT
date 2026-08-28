@@ -6,8 +6,14 @@
 	import DayNavigator from './DayNavigator.svelte';
 	import DayTimeline from './DayTimeline.svelte';
 	import Footer from './Footer.svelte';
+	import DatePickerModal from './DatePickerModal.svelte';
+	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
+	import { faCalendarDays, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 
 	let { resourceId }: { resourceId: string } = $props();
+
+	let showDatePicker = $state(false);
 
 	let days = $state<DayGroup[]>([]);
 	let selectedKey = $state('');
@@ -76,8 +82,18 @@
 {:else if days.length === 0}
 	<p class="p-4 font-body text-ink/60">Aucun cours trouvé.</p>
 {:else}
-	<DayNavigator {days} {selectedKey} onselect={(key) => (selectedKey = key)} />
-
+	<div class="flex items-start gap-2 px-4">
+		<div class="flex-1 overflow-hidden">
+			<DayNavigator {days} {selectedKey} onselect={(key) => (selectedKey = key)} />
+		</div>
+		<button
+				onclick={() => (showDatePicker = true)}
+				aria-label="Choisir une date"
+				class="mt-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-signal shadow-sm active:bg-lilac/30"
+			>
+		<FontAwesomeIcon icon={faCalendarDays} />
+		</button>
+	</div>
 	{#if selectedDay}
 		<div class="px-4 pb-24 pt-2">
 			<h2 class="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-ink/50">
@@ -95,7 +111,7 @@
 					disabled={selectedIndex <= 0}
 					class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none"
 				>
-					← Précédent
+					<FontAwesomeIcon icon={faArrowLeft} class="mx-1"/> Précédent
 				</button>
 				<button
 					onclick={selectClosestToToday}
@@ -110,9 +126,10 @@
 					disabled={selectedIndex >= days.length - 1}
 					class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none"
 				>
-					Suivant →
+					Suivant <FontAwesomeIcon icon={faArrowRight} class="mx-1" />
 				</button>
 			</div>
 		</div>
 	{/if}
+	<DatePickerModal bind:open={showDatePicker} {days} onselect={(key) => (selectedKey = key)} />
 {/if}
