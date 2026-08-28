@@ -294,7 +294,9 @@ async def get_grouped_resources():
 refresh_logger = logging.getLogger("daily_refresh")
 refresh_logger.setLevel(logging.INFO)
 
-_file_handler = logging.FileHandler("daily-refresh.log", encoding="utf-8")
+os.makedirs("logs", exist_ok=True)
+
+_file_handler = logging.FileHandler("logs/daily-refresh.log", encoding="utf-8")
 _file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
 refresh_logger.addHandler(_file_handler)
 
