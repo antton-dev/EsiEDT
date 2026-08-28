@@ -11,6 +11,8 @@ import httpx
 import json
 import re
 from datetime import datetime, timezone
+import asyncio
+import logging
 
 load_dotenv()
 
@@ -125,7 +127,9 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     FastAPICache.init(InMemoryBackend(), prefix="fastapi-cache")
-    
+    asyncio.create_task(daily_refresh_loop())
+
+
 @app.get("/api/schedule/{resource_id}")
 # @cache(expire=10)
 async def get_schedule(resource_id: str):
@@ -171,7 +175,7 @@ async def get_schedule(resource_id: str):
                 print(f"Erreur ADE: {response.status_code} - {response.text}")
                 if cached:
                     return cached["data"]
-                raise HTTPException(status_code=502, detail="502 : ADE est encore en panne :(")
+                raise HTTPException(status_code=502, detail="ADE est encore en panne :(")
             
             ics_content = response.content
             structured_data = parse_ics(ics_content)
@@ -191,7 +195,7 @@ async def get_schedule(resource_id: str):
             if cached:
                 return cached["data"]
 
-            raise HTTPException(status_code=503, detail="503 : ADE est en grève :(")
+            raise HTTPException(status_code=503, detail="ADE est en grève :(")
         
 
 @app.get("/api/search")
@@ -285,6 +289,59 @@ async def get_grouped_resources():
         "data": final_data
     }
 
+
+# Config logging
+refresh_logger = logging.getLogger("daily_refresh")
+refresh_logger.setLevel(logging.INFO)
+
+_file_handler = logging.FileHandler("daily-refresh.log", encoding="utf-8")
+_file_handler.setFormatter(logging.Formatter("%(asctime)s - %(message)s"))
+refresh_logger.addHandler(_file_handler)
+
+def seconds_units_next_round(hrs: int = 5, min: int = 0) -> float:
+    now = datetime.now()
+    next_run = now.replace(hour=hrs, minute=min, second=0, microsecond=0)
+
+    if next_run <= now:
+        next_run += timedelta(days=1)
+
+    return (next_run - now).total_seconds()
+
+async def refresh_all_resources():
+    """
+        rafraichit le cache de toutes les ressouces ics
+    """
+    resource_ids = set(RESOURCES_DB.values())
+    # resource_ids = set(list(resource_ids)[:3])
+    refresh_logger.info(f"Starting daily .ics refresh - {len(resource_ids)} to fetch")
+
+    success_count = 0
+    errors = []
+
+    for id in resource_ids:
+        try:
+            await get_schedule(id)
+            success_count += 1
+        except Exception as e:
+            errors.append(f"{id} : {e}")
+
+        await asyncio.sleep(4)
+    
+    refresh_logger.info(f"Completed. Success : {success_count}/{len(resource_ids)}. Errors : {len(errors)}")
+
+    if errors:
+        for err in errors:
+            refresh_logger.warning(f"Error {err}")
+
+async def daily_refresh_loop():
+    # wait_seconds = seconds_units_next_round(hrs=5, min=0)
+    while True:
+        await refresh_all_resources()
+        await asyncio.sleep(24*60*60)
+
+
+
+
 # /!\ FOR TEST AND LOCAL DEVELOPMENT ONLY /!\
 # DO NOT EXPOSE THIS ROUTE ON PROD
 
@@ -296,3 +353,5 @@ async def get_grouped_resources():
 #     global SIMULATE_ADE_DOWN
 #     SIMULATE_ADE_DOWN = not SIMULATE_ADE_DOWN
 #     return {"simulate_ade_down": SIMULATE_ADE_DOWN}
+
+
