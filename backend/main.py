@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import asyncio
 import logging
 
@@ -334,10 +334,11 @@ async def refresh_all_resources():
             refresh_logger.warning(f"Error {err}")
 
 async def daily_refresh_loop():
-    # wait_seconds = seconds_units_next_round(hrs=5, min=0)
     while True:
+        wait_seconds = seconds_units_next_round(hrs=7, min=00)
+        refresh_logger.info(f"{wait_seconds / 3600:.1f}h until next refresh")
+        await asyncio.sleep(wait_seconds)
         await refresh_all_resources()
-        await asyncio.sleep(24*60*60)
 
 
 
