@@ -19,21 +19,19 @@
 	});
 </script>
 
-<div class="min-h-screen bg-mist p-4">
+<div class="min-h-screen bg-mist p-4 dark:bg-mist-dark">
 	<div
 		class="mb-4 flex items-baseline justify-center gap-0.5 font-display text-4xl font-bold tracking-tight"
 	>
-		<span class="text-signal">Esi</span><span class="text-ink">EDT</span>
+		<span class="text-signal">Esi</span><span class="text-ink dark:text-ink-dark">EDT</span>
 	</div>
-	<h1 class="mb-6 font-display text-2xl font-bold text-ink">Choisis ta promo</h1>
+	<h1 class="mb-6 font-display text-2xl font-bold text-ink dark:text-ink-dark">Choisis ta promo</h1>
 
 	{#each groups as group, i (i)}
 		<div class:mt-6={i > 0}>
-			{#if group.label}
-				<h2 class="mb-2 font-display text-xs font-semibold uppercase tracking-wide text-ink/40">
-					{group.label}
-				</h2>
-			{/if}
+			<h2 class="mb-2 font-display text-xs font-semibold uppercase tracking-wide text-ink/40 dark:text-ink-dark/40">
+				{group.label}
+			</h2>
 			<div class="grid grid-cols-2 gap-3">
 				{#each group.items as name (name)}
 					<BigButton label={name} onclick={() => onselect(name)} />

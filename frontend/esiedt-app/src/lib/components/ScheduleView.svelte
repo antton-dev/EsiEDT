@@ -71,65 +71,66 @@
 			selectedKey = days[selectedIndex + 1].dateKey;
 	}
 </script>
-
 {#if loading}
-	<p class="p-4 font-body text-ink/60">Chargement de l'emploi du temps...</p>
+	<p class="p-4 font-body text-ink/60 dark:text-ink-dark/60">Chargement de l'emploi du temps...</p>
 {:else if error}
 	<div class="p-4">
 		<p class="text-coral">{error}</p>
 		<button onclick={load} class="mt-2 text-sm font-semibold text-signal">Réessayer</button>
 	</div>
 {:else if days.length === 0}
-	<p class="p-4 font-body text-ink/60">Aucun cours trouvé.</p>
+	<p class="p-4 font-body text-ink/60 dark:text-ink-dark/60">Aucun cours trouvé.</p>
 {:else}
-	<div class="flex items-start gap-2 px-4">
-		<div class="flex-1 overflow-hidden">
-			<DayNavigator {days} {selectedKey} onselect={(key) => (selectedKey = key)} />
-		</div>
-		<button
+	<div class="min-h-screen bg-mist dark:bg-mist-dark">
+		<div class="flex items-start gap-2 px-4">
+			<div class="flex-1 overflow-hidden">
+				<DayNavigator {days} {selectedKey} onselect={(key) => (selectedKey = key)} />
+			</div>
+			<button
 				onclick={() => (showDatePicker = true)}
 				aria-label="Choisir une date"
-				class="mt-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-signal shadow-sm active:bg-lilac/30"
+				class="mt-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-signal shadow-sm active:bg-lilac/30 dark:bg-surface-dark dark:active:bg-lilac-dark/20"
 			>
-		<FontAwesomeIcon icon={faCalendarDays} />
-		</button>
-	</div>
-	{#if selectedDay}
-		<div class="px-4 pb-24 pt-2">
-			<h2 class="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-ink/50">
-				{formatDayLabel(selectedDay.date)}
-			</h2>
-			<DayTimeline events={selectedDay.events} day={selectedDay.date} {now} />
+				<FontAwesomeIcon icon={faCalendarDays} />
+			</button>
 		</div>
-
-		<Footer compact {fetchedAt} />
-
-		<div class="fixed inset-x-0 bottom-0 border-t border-lilac/30 bg-white/95 p-4 backdrop-blur">
-			<div class="mx-auto flex max-w-md items-center gap-3">
-				<button
-					onclick={goToPreviousDay}
-					disabled={selectedIndex <= 0}
-					class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none"
-				>
-					<FontAwesomeIcon icon={faArrowLeft} class="mx-1"/> Précédent
-				</button>
-				<button
-					onclick={selectClosestToToday}
-					disabled={isOnToday}
-					aria-label="Revenir à aujourd'hui"
-					class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-signal font-display text-xs font-bold text-signal transition active:bg-signal active:text-mist disabled:cursor-not-allowed disabled:border-lilac/40 disabled:text-ink/30"
-				>
-					Auj.
-				</button>
-				<button
-					onclick={goToNextDay}
-					disabled={selectedIndex >= days.length - 1}
-					class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none"
-				>
-					Suivant <FontAwesomeIcon icon={faArrowRight} class="mx-1" />
-				</button>
+		{#if selectedDay}
+			<div class="px-4 pb-24 pt-2">
+				<h2 class="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-ink/50 dark:text-ink-dark/50">
+					{formatDayLabel(selectedDay.date)}
+				</h2>
+				<DayTimeline events={selectedDay.events} day={selectedDay.date} {now} />
 			</div>
-		</div>
-	{/if}
+
+			<Footer compact {fetchedAt} />
+
+			<div class="fixed inset-x-0 bottom-0 border-t border-lilac/30 bg-white/95 p-4 backdrop-blur dark:border-lilac-dark/20 dark:bg-surface-dark/95">
+				<div class="mx-auto flex max-w-md items-center gap-3">
+					<button
+						onclick={goToPreviousDay}
+						disabled={selectedIndex <= 0}
+						class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
+					>
+						<FontAwesomeIcon icon={faArrowLeft} class="mx-1" /> Précédent
+					</button>
+					<button
+						onclick={selectClosestToToday}
+						disabled={isOnToday}
+						aria-label="Revenir à aujourd'hui"
+						class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-signal font-display text-xs font-bold text-signal transition active:bg-signal active:text-mist disabled:cursor-not-allowed disabled:border-lilac/40 disabled:text-ink/30 "
+					>
+						Auj.
+					</button>
+					<button
+						onclick={goToNextDay}
+						disabled={selectedIndex >= days.length - 1}
+						class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
+					>
+						Suivant <FontAwesomeIcon icon={faArrowRight} class="mx-1" />
+					</button>
+				</div>
+			</div>
+		{/if}
+	</div>
 	<DatePickerModal bind:open={showDatePicker} {days} onselect={(key) => (selectedKey = key)} />
 {/if}

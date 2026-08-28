@@ -47,17 +47,17 @@
 	bind:this={dialogEl}
 	onclose={handleClose}
 	onclick={handleBackdropClick}
-	class="m-auto w-full max-w-sm rounded-2xl bg-white p-4 pb-6 shadow-lg backdrop:bg-ink/40 backdrop:backdrop-blur-sm"
+	class="m-auto w-full max-w-sm rounded-2xl bg-white p-4 pb-6 shadow-lg backdrop:bg-ink/40 backdrop:backdrop-blur-sm dark:bg-surface-dark dark:backdrop:bg-black/60"
 >
 	<div class="mb-3 flex items-center justify-between">
-		<h2 class="font-display text-lg font-bold text-ink">Choisir une date</h2>
+		<h2 class="font-display text-lg font-bold text-ink dark:text-ink-dark">Choisir une date</h2>
 		<button
 			onclick={() => (open = false)}
 			aria-label="Fermer"
-			class="flex h-8 w-8 items-center justify-center rounded-full text-ink/50 active:bg-lilac/30"
+			class="flex h-8 w-8 items-center justify-center rounded-full text-ink/50 active:bg-lilac/30 dark:text-ink-dark/50 dark:active:bg-lilac-dark/20"
 		>
-        <FontAwesomeIcon icon={faXmark} />
-        </button>
+			<FontAwesomeIcon icon={faXmark} />
+		</button>
 	</div>
 
 	<div class="flex justify-center">
@@ -65,13 +65,13 @@
 	</div>
 
 	<button
-		onclick={confirm}
-		disabled={isDisabledDate(pickedDate)}
-		class="mt-4 w-full rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40"
-	>
-		Voir ce jour
-	</button>
-	{#if isDisabledDate(pickedDate)}
-		<p class="mt-2 text-center text-xs text-ink/40">Pas de cours ce jour-là</p>
-	{/if}
+        onclick={confirm}
+        disabled={isDisabledDate(pickedDate)}
+        class="mt-4 w-full rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
+    >
+        Voir ce jour
+    </button>
+    {#if isDisabledDate(pickedDate)}
+        <p class="mt-2 text-center text-xs text-ink/40 dark:text-ink-dark/40">Pas de cours ce jour-là</p>
+    {/if}
 </dialog>

@@ -25,14 +25,11 @@
 
 <div class="relative" style="height: {totalHeight}px">
 	{#each hours as minutes (minutes)}
-		<div
-			class="absolute left-0 right-0 flex items-start"
-			style="top: {(minutes - bounds.startMinutes) * PX_PER_MIN}px"
-		>
-			<span class="w-10 -translate-y-1/2 text-right font-mono text-xs text-ink/40">
+		<div class="absolute left-0 right-0 flex items-start" style="top: {(minutes - bounds.startMinutes) * PX_PER_MIN}px">
+			<span class="w-10 -translate-y-1/2 text-right font-mono text-xs text-ink/40 dark:text-ink-dark/40">
 				{String(Math.floor(minutes / 60)).padStart(2, '0')}h
 			</span>
-			<div class="ml-2 h-px flex-1 bg-lilac/30"></div>
+			<div class="ml-2 h-px flex-1 bg-lilac/30 dark:bg-lilac-dark/20"></div>
 		</div>
 	{/each}
 

@@ -24,7 +24,9 @@
 			data-day-key={day.dateKey}
 			onclick={() => onselect(day.dateKey)}
 			class="shrink-0 rounded-full px-4 py-2 font-body text-sm font-semibold transition
-				{day.dateKey === selectedKey ? 'bg-signal text-mist' : 'bg-white text-ink/70'}"
+				{day.dateKey === selectedKey
+				? 'bg-signal text-mist'
+				: 'bg-white text-ink/70 dark:bg-surface-dark dark:text-ink-dark/70'}"
 		>
 			{formatDayShort(day.date)}
 		</button>
