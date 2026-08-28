@@ -1,6 +1,7 @@
 <script lang="ts">
 	import BigButton from './BigButton.svelte';
-
+	import Footer from './Footer.svelte';
+	
 	let { categories, onselect }: { categories: string[]; onselect: (name: string) => void } =
 		$props();
 
@@ -39,4 +40,6 @@
 			</div>
 		</div>
 	{/each}
+	<Footer />
+
 </div>
