@@ -12,7 +12,7 @@
 </script>
 
 <footer
-	class="mt-8 border-t border-lilac/30 px-4 pt-4 text-center font-body text-xs text-ink/40 dark:border-lilac-dark/20 dark:text-ink-dark/40"
+	class=" border-t border-lilac/30 px-4 pt-4 text-center font-body text-xs text-ink/40 dark:border-lilac-dark/20 dark:text-ink-dark/40"
 	class:pb-28={compact}
 	class:pb-6={!compact}
 >
@@ -24,7 +24,7 @@
 		{labels[themeStore.mode]}
 	</button>
 
-	<p>Données ADE mises en cache toutes les 2h</p>
+	<p class="text-xxs">Données ADE mises en cache tous les jours à 7h00, puis à la demande pendant 2h.</p>
 	<p>
 		{#if fetchedAt}
 			Dernière synchronisation avec ADE : <span class="font-mono">{formatDateTime(fetchedAt)}</span>
