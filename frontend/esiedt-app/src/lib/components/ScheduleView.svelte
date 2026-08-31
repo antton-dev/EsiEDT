@@ -11,7 +11,7 @@
 	import { faCalendarDays, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 
-	let { resourceId }: { resourceId: string } = $props();
+	let { resourceId, groupName }: { resourceId: string; groupName: string } = $props();
 
 	let showDatePicker = $state(false);
 
@@ -43,10 +43,15 @@
 	async function load() {
 		loading = true;
 		error = '';
+		
 		try {
 			const data = await fetchSchedule(resourceId);
 			fetchedAt = data.fetched_at;
 			days = groupEventsByDay(data.events);
+			
+			if (typeof umami !== 'undefined') {
+				umami.track('schedule_viewed', { group: groupName });
+			}
 
 			const debugDate = dev ? new URLSearchParams(window.location.search).get('debugDate') : null;
 			now = debugDate ? new Date(debugDate) : new Date();

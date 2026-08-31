@@ -44,7 +44,7 @@
 		<button onclick={clearGroup} class="text-sm font-semibold text-signal">Changer</button>
 	</div>
 	{#key groupStore.current.id}
-		<ScheduleView resourceId={groupStore.current.id} />
+		<ScheduleView resourceId={groupStore.current.id} groupName={groupStore.current.name} />
 	{/key}
 {:else if loading}
 	<div class="flex min-h-screen items-center justify-center bg-mist dark:bg-mist-dark">
