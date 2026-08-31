@@ -27,7 +27,7 @@ services:
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: umami
-      POSTGRES_PASSWORD: xuwVBjv4hPJlONDGlcCgYFgHU37Pep-ur0HTAvbQwUVdriUDDxhbcZsuRdbM
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD}
     volumes:
       - umami_db_data:/var/lib/postgresql/data
     networks:
@@ -38,10 +38,9 @@ services:
     container_name: esiedt_umami
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://umami:xuwVBjv4hPJlONDGlcCgYFgHU37Pep-ur0HTAvbQwUVdriUDDxhbcZsuRdbM@umami-db:5432/umami
+      DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD}@umami-db:5432/umami
       DATABASE_TYPE: postgresql
-      APP_SECRET: auV1MUfW2ztWW9XmJe9ucZ1DLjX42dSfbrHCa20mK33-GO8FvTTzM83uFGli
-      BASE_PATH: /stats
+      APP_SECRET: ${UMAMI_APP_SECRET}
     depends_on:
       - umami-db
     networks:
