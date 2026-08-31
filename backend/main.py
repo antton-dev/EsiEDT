@@ -15,13 +15,13 @@ import asyncio
 import logging
 from pydantic import BaseModel
 from fastapi import Header, Depends
-
+from datetime import datetime as dt
 
 load_dotenv()
 
 class MaintenanceAnnouncement(BaseModel):
-    starts_at: str
-    ends_at: str
+    starts_at: dt
+    ends_at: dt
 
 # -- Global variables --
 CATEGORY_ORDER = [
