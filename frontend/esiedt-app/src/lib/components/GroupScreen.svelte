@@ -17,6 +17,13 @@
 		onselect: (group: ResourceGroup) => void;
 		onback: () => void;
 	} = $props();
+
+	function handleSelect(group: ResourceGroup) {
+	if (typeof umami !== 'undefined') {
+		umami.track('group_selected', { category: categoryName, group: group.short_name });
+	}
+	onselect(group);
+}
 </script>
 
 <div class="flex min-h-screen flex-col bg-mist p-4 dark:bg-mist-dark">
@@ -35,7 +42,7 @@
 	</div>
 	<div class="grid grid-cols-2 gap-3">
 		{#each groups as group (group.id)}
-			<BigButton label={group.short_name} onclick={() => onselect(group)} />
+			<BigButton label={group.short_name} onclick={() => handleSelect(group)} />
 		{/each}
 	</div>
 	<div class="mt-auto">

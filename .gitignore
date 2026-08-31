@@ -4,3 +4,4 @@ backend/__pycache__
 backend/ADECal.ics
 backend/daily-refresh.log
 backend/logs
+.env

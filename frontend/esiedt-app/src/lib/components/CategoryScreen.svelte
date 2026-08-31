@@ -5,6 +5,14 @@
 	let { categories, onselect }: { categories: string[]; onselect: (name: string) => void } =
 		$props();
 
+	function handleSelect(name: string) {
+		if (typeof umami !== 'undefined') {
+			umami.track('category_selected', { category: name });
+		}
+		onselect(name);
+	}
+
+
 	// Regroupe les catégories par famille (Prépa / Ingé / Autres) en se basant sur leur nom,
 	// tout en respectant l'ordre déjà renvoyé par le backend (categories arrive pré-triée).
 	let groups = $derived.by(() => {
@@ -35,7 +43,7 @@
 			</h2>
 			<div class="grid grid-cols-2 gap-3">
 				{#each group.items as name (name)}
-					<BigButton label={name} onclick={() => onselect(name)} />
+					<BigButton label={name} onclick={() => handleSelect(name)} />
 				{/each}
 			</div>
 		</div>
