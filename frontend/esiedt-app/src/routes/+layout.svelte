@@ -3,6 +3,7 @@
 	import { browser } from '$app/environment';
 	import './layout.css'; 
 	import InstallButton from '$lib/components/InstallButton.svelte';
+	import MaintenanceBanner from '$lib/components/MaintenanceBanner.svelte';
 
 	let { children } = $props();
 
@@ -13,5 +14,6 @@
 	}
 </script>
 
+<MaintenanceBanner />
 {@render children()}
 <InstallButton />

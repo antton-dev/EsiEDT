@@ -13,8 +13,15 @@ import re
 from datetime import datetime, timezone, timedelta
 import asyncio
 import logging
+from pydantic import BaseModel
+from fastapi import Header, Depends
+
 
 load_dotenv()
+
+class MaintenanceAnnouncement(BaseModel):
+    starts_at: str
+    ends_at: str
 
 # -- Global variables --
 CATEGORY_ORDER = [
@@ -38,6 +45,8 @@ SIMULATE_ADE_DOWN = False
 FIXTURE_MODE = os.getenv("FIXTURE_MODE", "false") == "true"
 FIXTURE_ICS_PATH = "ADECal.ics"
 
+
+MAINTENANCE_ANNNOUNCEMENT : MaintenanceAnnouncement | None = None;
 
 
 # -- BDD des groupes --
@@ -114,7 +123,7 @@ app = FastAPI(title="EsiEDT")
 # -- CORS config --
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://esiedt.anttonc.fr", "http://localhost:3000", "http://localhost:5173", "http://192.168.1.34:5173"],
+    allow_origins=["https://esiedt.anttonc.fr", "http://localhost:3000", "http://localhost:5173", "http://192.168.1.34:5173", "http://192.168.1.3:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -358,3 +367,26 @@ async def daily_refresh_loop():
 #     return {"simulate_ade_down": SIMULATE_ADE_DOWN}
 
 
+def verify_admin(x_admin_secret: str = Header(...)):
+    expected = os.getenv("ADMIN_SECRET")
+    if not expected or x_admin_secret != expected:
+        raise HTTPException(status_code=403, detail="Accès refusé")
+
+
+
+@app.post("/api/maintenance/")
+async def set_maintenance(announcement: MaintenanceAnnouncement, _=Depends(verify_admin)):
+    global MAINTENANCE_ANNNOUNCEMENT
+    MAINTENANCE_ANNNOUNCEMENT = announcement
+    return {"status": "set", "announcement": announcement}
+
+@app.delete("/api/maintenance")
+async def delete_maintenance(_=Depends(verify_admin)):
+    global MAINTENANCE_ANNNOUNCEMENT
+    MAINTENANCE_ANNNOUNCEMENT = None
+    return {"status": "removed"}
+
+@app.get('/api/maintenance')
+async def get_maintenance():
+    global MAINTENANCE_ANNNOUNCEMENT
+    return {"announcement": MAINTENANCE_ANNNOUNCEMENT}

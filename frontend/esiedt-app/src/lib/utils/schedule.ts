@@ -46,6 +46,10 @@ export function formatDayShort(date: Date): string {
 	return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
 }
 
+export function formatDateTimeFull(iso: string): string {
+	return new Date(iso).toLocaleDateString("fr-FR", {day: 'numeric', month: 'long', hour: '2-digit', minute:"2-digit"});
+}
+
 export function formatDateTime(iso: string): string {
 	return new Date(iso).toLocaleString('fr-FR', {
 		day: 'numeric',

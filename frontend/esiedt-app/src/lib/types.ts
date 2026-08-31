@@ -37,3 +37,13 @@ export interface GroupsResponse {
     categories_count: number;
     data: Record<string, ResourceGroup[]>;
 }
+
+export interface MaintenanceAnnouncement {
+    starts_at: string;
+    ends_at: string;
+}
+
+
+export interface MaintenanceResponse {
+    announcement: MaintenanceAnnouncement | null;
+}

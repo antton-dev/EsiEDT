@@ -1,4 +1,4 @@
-import type { ScheduleResponse, SearchResponse, GroupsResponse } from "./types";
+import type { ScheduleResponse, SearchResponse, GroupsResponse, MaintenanceResponse } from "./types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -25,4 +25,8 @@ export function searchResources(query: string): Promise<SearchResponse> {
 
 export function fetchSchedule(resourceId: string): Promise<ScheduleResponse> {
     return apiFetch(`/api/schedule/${resourceId}`);
+}
+
+export function fetchMaintenance() : Promise<MaintenanceResponse> {
+    return apiFetch("/api/maintenance")
 }
