@@ -2,6 +2,7 @@ export interface ScheduleEvent {
     title: string;
     location: string;
     professor: string;
+    lesson_type: string | null;
     start_time: string | null;
     end_time: string | null;
 }

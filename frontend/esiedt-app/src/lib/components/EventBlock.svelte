@@ -43,7 +43,9 @@
 				class:text-sm={isTiny}
 				class:text-base={!isTiny}
 			>
-				{event.title}
+				{#if event.lesson_type}
+					<span class="text-signal">{event.lesson_type}</span>
+				{/if} {event.title}
 			</h3>
 			{#if event.start_time && event.end_time}
 				<span class="shrink-0 font-mono text-xs font-medium text-signal">

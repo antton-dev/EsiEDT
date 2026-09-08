@@ -35,6 +35,8 @@ CATEGORY_ORDER = [
     "3A Ingé App",
 ]
 
+LESSON_TYPES = ["CM", "TD", "TP"]
+
 SHORT_NAME_PREFIX_ORDER = ["TP", "Gr", "Pr"]
 
 LAST_GOOD_RESPONSE: dict[str, dict] = {}
@@ -73,7 +75,8 @@ def parse_ics(ics_data: bytes):
         events.append({
             'title': summary,
             'location': location,
-            'professor': clean_description(description),
+            'professor': extract_prof_name(description),
+            'lesson_type': extract_lesson_type(description),
             'start_time': start,
             'end_time': end
         })
@@ -101,8 +104,22 @@ def category_sort_key(cat_name):
         return (0, CATEGORY_ORDER.index(cat_name))
     return (1, cat_name)
 
+def extract_lesson_type(description: str) -> str | None:
+    """ Extrait le type de cours (CM/TD/TP/None) depuis le champs description"""
+    lines = [line.strip() for line in description.split('\n') if line.strip()]
+    if not lines:
+        return None
+    
+    code_line = lines[len(lines) - 3]
+    parts = code_line.split("_")
 
-def clean_description(description: str):
+    for part in parts:
+        if part in LESSON_TYPES:
+            return part
+    
+    return None
+
+def extract_prof_name(description: str):
     lines = [line.strip() for line in description.split('\n') if line.strip()]
 
     prof_name = ""  
