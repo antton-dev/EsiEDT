@@ -5,18 +5,32 @@
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 
+	const HIDE_AFTER_HRS = 2;
 	let announcement = $state<{ starts_at: string; ends_at: string } | null>(null);
 
 	onMount(async () => {
 		try {
 			const data = await fetchMaintenance();
-			if (data.announcement) {
-				announcement = data.announcement;
-			}
+			if (!data.announcement) return;
+			
+			const ends_at = new Date(data.announcement.ends_at);
+			const starts_at = new Date(data.announcement.starts_at);
+
+			const hideAfter = new Date(ends_at.getTime() + HIDE_AFTER_HRS*60*60*1000);
+
+			if (new Date() >= hideAfter) return;
+
+			announcement = data.announcement;
+			
 		} catch {
-			// Si cet appel échoue, on ignore silencieusement — pas la peine de bloquer
-			// l'affichage du reste de l'app pour une bannière d'info non critique.
+			// non bloquant
 		}
+	});
+
+	let isOnGoing = $derived.by(() => {
+		if (!announcement) return false;
+		const now = new Date();
+		return now >= new Date(announcement.starts_at) && now < new Date(announcement.ends_at)
 	});
 </script>
 
@@ -26,9 +40,13 @@
 	>
 		<FontAwesomeIcon icon={faTriangleExclamation} class="mt-0.5 shrink-0" />
 		<p>
+			{#if isOnGoing}
+				Maintenance en cours. Le site peut subir des perturbations ou des interruptions. Fin estimée : {formatDateTimeFull(announcement.ends_at)}
+			{:else}
 			Maintenance prévue entre le <span class="font-mono">{formatDateTimeFull(announcement.starts_at)}</span>
 			et <span class="font-mono">{formatDateTimeFull(announcement.ends_at)}</span>. EsiEDT pourra être
 			inaccessible pendant cette période.
+			{/if}
 		</p>
 	</div>
 {/if}
