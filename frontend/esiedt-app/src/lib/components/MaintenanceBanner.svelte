@@ -41,9 +41,9 @@
 		<FontAwesomeIcon icon={faTriangleExclamation} class="mt-0.5 shrink-0" />
 		<p>
 			{#if isOnGoing}
-				Maintenance en cours. Le site peut subir des perturbations ou des interruptions. Fin estimée : {formatDateTimeFull(announcement.ends_at)}
+				<span class="font-bold">Maintenance en cours</span>. Le site peut subir des perturbations ou des interruptions. Fin estimée : <span class="font-mono">{formatDateTimeFull(announcement.ends_at)} </span>
 			{:else}
-			Maintenance prévue entre le <span class="font-mono">{formatDateTimeFull(announcement.starts_at)}</span>
+			Maintenance prévue entre le <span class="font-mono"> {formatDateTimeFull(announcement.starts_at)}</span>
 			et <span class="font-mono">{formatDateTimeFull(announcement.ends_at)}</span>. EsiEDT pourra être
 			inaccessible pendant cette période.
 			{/if}
