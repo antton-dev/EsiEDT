@@ -48,9 +48,9 @@ FIXTURE_MODE = os.getenv("FIXTURE_MODE", "false") == "true"
 FIXTURE_ICS_PATH = "ADECal.ics"
 
 
-MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 MAINTENANCE_FILE = "data/maintenance.json"
 os.makedirs("data", exist_ok=True)
+MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 # -- BDD des groupes --
 try: 
     with open("resources.json", "r", encoding="utf-8") as f:
@@ -134,6 +134,30 @@ def extract_prof_name(description: str):
         prof_name = lines[-1]
 
     return prof_name
+
+
+
+def save_maintenance_to_disk(announcement: MaintenanceAnnouncement | None):
+    if announcement is None:
+        if os.path.exists(MAINTENANCE_FILE):
+            os.remove(MAINTENANCE_FILE)
+        return
+
+    with open(MAINTENANCE_FILE, "w", encoding="utf-8") as f:
+        f.write(announcement.model_dump_json())
+
+
+def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
+    if not os.path.exists(MAINTENANCE_FILE):
+        return None
+
+    try:
+        with open(MAINTENANCE_FILE, "r", encoding="utf-8") as f:
+            return MaintenanceAnnouncement.model_validate_json(f.read())
+    except Exception as e:
+        print(f"Erreur lecture maintenance.json: {e}")
+        return None
+        
 
 app = FastAPI(title="EsiEDT")
 
@@ -411,24 +435,3 @@ async def get_maintenance():
     return {"announcement": MAINTENANCE_ANNNOUNCEMENT}
 
 
-
-def save_maintenance_to_disk(announcement: MaintenanceAnnouncement | None):
-    if announcement is None:
-        if os.path.exists(MAINTENANCE_FILE):
-            os.remove(MAINTENANCE_FILE)
-        return
-
-    with open(MAINTENANCE_FILE, "w", encoding="utf-8") as f:
-        f.write(announcement.model_dump_json())
-
-
-def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
-    if not os.path.exists(MAINTENANCE_FILE):
-        return None
-
-    try:
-        with open(MAINTENANCE_FILE, "r", encoding="utf-8") as f:
-            return MaintenanceAnnouncement.model_validate_json(f.read())
-    except Exception as e:
-        print(f"Erreur lecture maintenance.json: {e}")
-        return None
