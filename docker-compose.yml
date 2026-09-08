@@ -17,6 +17,7 @@ services:
       - ./backend/.env
     volumes:
       - ./backend/logs:/app/logs
+      - ./backend/data:/app/data
     networks:
       - caddy_net
 

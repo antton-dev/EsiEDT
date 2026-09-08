@@ -48,9 +48,9 @@ FIXTURE_MODE = os.getenv("FIXTURE_MODE", "false") == "true"
 FIXTURE_ICS_PATH = "ADECal.ics"
 
 
-MAINTENANCE_ANNNOUNCEMENT : MaintenanceAnnouncement | None = None;
-
-
+MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
+MAINTENANCE_FILE = "data/maintenance.json"
+os.makedirs("data", exist_ok=True)
 # -- BDD des groupes --
 try: 
     with open("resources.json", "r", encoding="utf-8") as f:
@@ -395,15 +395,40 @@ def verify_admin(x_admin_secret: str = Header(...)):
 async def set_maintenance(announcement: MaintenanceAnnouncement, _=Depends(verify_admin)):
     global MAINTENANCE_ANNNOUNCEMENT
     MAINTENANCE_ANNNOUNCEMENT = announcement
+    save_maintenance_to_disk(announcement)
     return {"status": "set", "announcement": announcement}
 
 @app.delete("/api/maintenance")
 async def delete_maintenance(_=Depends(verify_admin)):
     global MAINTENANCE_ANNNOUNCEMENT
     MAINTENANCE_ANNNOUNCEMENT = None
+    save_maintenance_to_disk(None)
     return {"status": "removed"}
 
 @app.get('/api/maintenance')
 async def get_maintenance():
     global MAINTENANCE_ANNNOUNCEMENT
     return {"announcement": MAINTENANCE_ANNNOUNCEMENT}
+
+
+
+def save_maintenance_to_disk(announcement: MaintenanceAnnouncement | None):
+    if announcement is None:
+        if os.path.exists(MAINTENANCE_FILE):
+            os.remove(MAINTENANCE_FILE)
+        return
+
+    with open(MAINTENANCE_FILE, "w", encoding="utf-8") as f:
+        f.write(announcement.model_dump_json())
+
+
+def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
+    if not os.path.exists(MAINTENANCE_FILE):
+        return None
+
+    try:
+        with open(MAINTENANCE_FILE, "r", encoding="utf-8") as f:
+            return MaintenanceAnnouncement.model_validate_json(f.read())
+    except Exception as e:
+        print(f"Erreur lecture maintenance.json: {e}")
+        return None
