@@ -50,7 +50,6 @@ FIXTURE_ICS_PATH = "ADECal.ics"
 
 MAINTENANCE_FILE = "data/maintenance.json"
 os.makedirs("data", exist_ok=True)
-MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 # -- BDD des groupes --
 try: 
     with open("resources.json", "r", encoding="utf-8") as f:
@@ -158,6 +157,7 @@ def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
         print(f"Erreur lecture maintenance.json: {e}")
         return None
 
+MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 
 app = FastAPI(title="EsiEDT")
 
