@@ -157,7 +157,7 @@ def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
     except Exception as e:
         print(f"Erreur lecture maintenance.json: {e}")
         return None
-        
+
 
 app = FastAPI(title="EsiEDT")
 
@@ -417,21 +417,21 @@ def verify_admin(x_admin_secret: str = Header(...)):
 
 @app.post("/api/maintenance/")
 async def set_maintenance(announcement: MaintenanceAnnouncement, _=Depends(verify_admin)):
-    global MAINTENANCE_ANNNOUNCEMENT
-    MAINTENANCE_ANNNOUNCEMENT = announcement
+    global MAINTENANCE_ANNOUNCEMENT
+    MAINTENANCE_ANNOUNCEMENT = announcement
     save_maintenance_to_disk(announcement)
     return {"status": "set", "announcement": announcement}
 
 @app.delete("/api/maintenance")
 async def delete_maintenance(_=Depends(verify_admin)):
-    global MAINTENANCE_ANNNOUNCEMENT
-    MAINTENANCE_ANNNOUNCEMENT = None
+    global MAINTENANCE_ANNOUNCEMENT
+    MAINTENANCE_ANNOUNCEMENT = None
     save_maintenance_to_disk(None)
     return {"status": "removed"}
 
 @app.get('/api/maintenance')
 async def get_maintenance():
-    global MAINTENANCE_ANNNOUNCEMENT
-    return {"announcement": MAINTENANCE_ANNNOUNCEMENT}
+    global MAINTENANCE_ANNOUNCEMENT
+    return {"announcement": MAINTENANCE_ANNOUNCEMENT}
 
 
