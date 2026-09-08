@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { dev } from '$app/environment';
 	import { fetchSchedule } from '$lib/api';
-	import { groupEventsByDay, formatDayLabel, toDateKey, type DayGroup } from '$lib/utils/schedule';
+	import { groupEventsByDay, formatDayLabel, toDateKey, extractPromoName, type DayGroup } from '$lib/utils/schedule';
 	import DayNavigator from './DayNavigator.svelte';
 	import DayTimeline from './DayTimeline.svelte';
 	import Footer from './Footer.svelte';
@@ -40,6 +40,8 @@
 		selectedKey = upcoming ? upcoming.dateKey : (days[0]?.dateKey ?? '');
 	}
 
+	
+
 	async function load() {
 		loading = true;
 		error = '';
@@ -50,7 +52,7 @@
 			days = groupEventsByDay(data.events);
 			
 			if (typeof umami !== 'undefined') {
-				umami.track('schedule_viewed', { group: groupName });
+				umami.track('schedule_viewed', { group: extractPromoName(groupName) });
 			}
 
 			const debugDate = dev ? new URLSearchParams(window.location.search).get('debugDate') : null;

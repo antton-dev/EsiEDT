@@ -88,3 +88,8 @@ export function getDayBounds(events: ScheduleEvent[]): DayBounds {
 		endMinutes: Math.ceil(max / 60) * 60
 	};
 }
+
+export function extractPromoName(fullGroupName: string): string {
+	const separatorIndex = fullGroupName.indexOf(' - ');
+	return separatorIndex === -1 ? fullGroupName : fullGroupName.slice(0, separatorIndex);
+}
