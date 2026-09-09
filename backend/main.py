@@ -136,6 +136,13 @@ def extract_prof_name(description: str):
 
 
 
+def verify_admin(x_admin_secret: str = Header(...)):
+    expected = os.getenv("ADMIN_SECRET")
+    if not expected or x_admin_secret != expected:
+        raise HTTPException(status_code=403, detail="Accès refusé")
+
+
+
 def save_maintenance_to_disk(announcement: MaintenanceAnnouncement | None):
     if announcement is None:
         if os.path.exists(MAINTENANCE_FILE):
@@ -339,6 +346,13 @@ async def get_grouped_resources():
         "data": final_data
     }
 
+@app.post("/api/cache/refresh")
+async def manual_refresh(_=Depends(verify_admin)):
+    try: 
+        await refresh_all_resources()
+        return True
+    except: 
+        raise HTTPException(status_code=500, message="impossible de refresh manuellement")
 
 # Config logging
 refresh_logger = logging.getLogger("daily_refresh")
@@ -406,12 +420,6 @@ async def daily_refresh_loop():
 #     global SIMULATE_ADE_DOWN
 #     SIMULATE_ADE_DOWN = not SIMULATE_ADE_DOWN
 #     return {"simulate_ade_down": SIMULATE_ADE_DOWN}
-
-
-def verify_admin(x_admin_secret: str = Header(...)):
-    expected = os.getenv("ADMIN_SECRET")
-    if not expected or x_admin_secret != expected:
-        raise HTTPException(status_code=403, detail="Accès refusé")
 
 
 
