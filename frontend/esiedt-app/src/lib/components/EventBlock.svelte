@@ -5,8 +5,9 @@
 	let {
 		event,
 		bounds,
-		pxPerMin
-	}: { event: ScheduleEvent; bounds: DayBounds; pxPerMin: number } = $props();
+		pxPerMin,
+		compact = false
+	}: { event: ScheduleEvent; bounds: DayBounds; pxPerMin: number; compact?: boolean } = $props();
 
 	let top = $derived(
 		event.start_time
@@ -20,39 +21,48 @@
 	);
 	let blockHeight = $derived(Math.max(height - 4, 36));
 
-	// Seuils calculés à partir du rendu réel (padding + hauteurs de ligne), pas ajustés à l'œil :
-	// Colonne (titre + 2 lignes empilées) : 24 (padding) + 28 (titre) + 2 (gap) + 20 + 20 (2 lignes) = 94px
-	// Ligne compacte (titre + 1 ligne) : 24 (padding) + 28 (titre) + 2 (gap) + 20 (1 ligne) = 74px
-	// En dessous : uniquement le titre, pas assez de place pour salle/prof sans les couper
 	const COLUMN_THRESHOLD = 95;
 	const COMPACT_THRESHOLD = 74;
 
-	let isTiny = $derived(blockHeight < 55);
+	let isTiny = $derived(blockHeight < 55 || compact);
 </script>
 
 <div
-	class="absolute left-14 right-2 overflow-hidden rounded-md border-l-4 border-signal bg-white shadow-sm dark:bg-surface-dark"
+	class="absolute overflow-hidden rounded-md border-l-4 border-signal bg-white shadow-sm dark:bg-surface-dark"
+	class:left-14={!compact}
+	class:right-2={!compact}
+	class:left-1={compact}
+	class:right-1={compact}
 	class:p-2={isTiny}
 	class:p-3={!isTiny}
 	style="top: {top}px; height: {blockHeight}px"
 >
 	<div class="flex h-full flex-col">
-		<div class="flex items-center justify-between gap-2">
-			<h3
-				class="truncate font-display font-bold text-ink dark:text-ink-dark"
-				class:text-sm={isTiny}
-				class:text-base={!isTiny}
-			>
-				{#if event.lesson_type}
-					<span class="text-signal">{event.lesson_type}</span>
-				{/if} {event.title}
+		{#if compact}
+			<h3 class="truncate font-display text-sm font-bold text-ink dark:text-ink-dark">
+				{#if event.lesson_type}<span class="text-signal">{event.lesson_type}</span>{' '}{/if}{event.title}
 			</h3>
 			{#if event.start_time && event.end_time}
 				<span class="shrink-0 font-mono text-xs font-medium text-signal">
 					{formatTime(event.start_time)}–{formatTime(event.end_time)}
 				</span>
 			{/if}
-		</div>
+		{:else}
+			<div class="flex items-center justify-between gap-2">
+				<h3
+					class="truncate font-display font-bold text-ink dark:text-ink-dark"
+					class:text-sm={isTiny}
+					class:text-base={!isTiny}
+				>
+					{#if event.lesson_type}<span class="text-signal">{event.lesson_type}</span>{' '}{/if}{event.title}
+				</h3>
+				{#if event.start_time && event.end_time}
+					<span class="shrink-0 font-mono text-xs font-medium text-signal">
+						{formatTime(event.start_time)}–{formatTime(event.end_time)}
+					</span>
+				{/if}
+			</div>
+		{/if}
 
 		{#if blockHeight > COLUMN_THRESHOLD}
 			<div class="flex min-w-0 flex-col gap-0.5 font-body text-sm text-ink/70 dark:text-ink-dark/70">

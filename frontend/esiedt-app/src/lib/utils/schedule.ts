@@ -93,3 +93,42 @@ export function extractPromoName(fullGroupName: string): string {
 	const separatorIndex = fullGroupName.indexOf(' - ');
 	return separatorIndex === -1 ? fullGroupName : fullGroupName.slice(0, separatorIndex);
 }
+
+export function getWeekBounds(days: DayGroup[]): DayBounds {
+	const allEvents = days.flatMap((d) => d.events);
+	return getDayBounds(allEvents);
+}
+
+export interface WeekGroup {
+	weekKey: string;
+	days: DayGroup[];
+}
+
+function getMondayKey(date: Date): string {
+	const d = new Date(date);
+	const dayOfWeek = d.getDay(); // 0 = dimanche, 1 = lundi, ...
+	const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+	d.setDate(d.getDate() + diffToMonday);
+	return toDateKey(d);
+}
+
+export function groupDaysByWeek(days: DayGroup[]): WeekGroup[] {
+	const map = new Map<string, DayGroup[]>();
+
+	for (const day of days) {
+		// On ne garde que Lundi (1) à Vendredi (5) — l'école est fermée le week-end
+		const dayOfWeek = day.date.getDay();
+		if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+		const weekKey = getMondayKey(day.date);
+		if (!map.has(weekKey)) map.set(weekKey, []);
+		map.get(weekKey)!.push(day);
+	}
+
+	return Array.from(map.entries())
+		.map(([weekKey, weekDays]) => ({
+			weekKey,
+			days: weekDays.sort((a, b) => a.dateKey.localeCompare(b.dateKey))
+		}))
+		.sort((a, b) => a.weekKey.localeCompare(b.weekKey));
+}

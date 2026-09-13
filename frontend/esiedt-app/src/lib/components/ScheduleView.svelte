@@ -2,14 +2,14 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { dev } from '$app/environment';
 	import { fetchSchedule } from '$lib/api';
-	import { groupEventsByDay, formatDayLabel, toDateKey, extractPromoName, type DayGroup } from '$lib/utils/schedule';
+	import { groupEventsByDay, formatDayLabel, toDateKey, extractPromoName, groupDaysByWeek, formatDayShort, type DayGroup } from '$lib/utils/schedule';
 	import DayNavigator from './DayNavigator.svelte';
 	import DayTimeline from './DayTimeline.svelte';
 	import Footer from './Footer.svelte';
 	import DatePickerModal from './DatePickerModal.svelte';
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
-	import { faCalendarDays, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-
+	import { faCalendarDays, faArrowLeft, faArrowRight, faTableCellsLarge, faCalendarDay} from '@fortawesome/free-solid-svg-icons';
+	import WeekTimeline from './WeekTimeline.svelte';
 
 	let { resourceId, groupName }: { resourceId: string; groupName: string } = $props();
 
@@ -77,6 +77,31 @@
 		if (selectedIndex >= 0 && selectedIndex < days.length - 1)
 			selectedKey = days[selectedIndex + 1].dateKey;
 	}
+
+
+	let viewMode = $state<'day' | 'week'>('day');
+
+	let currentWeekDays = $derived.by(() => {
+		if (!selectedDay) return [];
+		const weeks = groupDaysByWeek(days);
+		const week = weeks.find((w) => w.days.some((d) => d.dateKey === selectedKey));
+		return week?.days ?? [];
+	});
+
+	function goToPreviousWeek() {
+		const weeks = groupDaysByWeek(days);
+		const currentWeekIndex = weeks.findIndex((w) => w.days.some((d) => d.dateKey === selectedKey));
+		if (currentWeekIndex > 0) {
+			selectedKey = weeks[currentWeekIndex - 1].days[0].dateKey;
+		}
+	}
+	function goToNextWeek() {
+		const weeks = groupDaysByWeek(days);
+		const currentWeekIndex = weeks.findIndex((w) => w.days.some((d) => d.dateKey === selectedKey));
+		if (currentWeekIndex >= 0 && currentWeekIndex < weeks.length - 1) {
+			selectedKey = weeks[currentWeekIndex + 1].days[0].dateKey;
+		}
+	}
 </script>
 {#if loading}
 	<p class="p-4 font-body text-ink/60 dark:text-ink-dark/60">Chargement de l'emploi du temps...</p>
@@ -100,40 +125,58 @@
 			>
 				<FontAwesomeIcon icon={faCalendarDays} />
 			</button>
+			<button
+				onclick={() => (viewMode = viewMode === 'day' ? 'week' : 'day')}
+				aria-label={viewMode === 'day' ? 'Passer en vue semaine' : 'Passer en vue jour'}
+				class="mt-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-signal shadow-sm active:bg-lilac/30 dark:bg-surface-dark dark:active:bg-lilac-dark/20"
+			>
+				<FontAwesomeIcon icon={viewMode === 'day' ? faTableCellsLarge : faCalendarDay} />
+			</button>
 		</div>
 		{#if selectedDay}
-			<div class="px-4 pb-24 pt-2">
-				<h2 class="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-ink/50 dark:text-ink-dark/50">
-					{formatDayLabel(selectedDay.date)}
-				</h2>
-				<DayTimeline events={selectedDay.events} day={selectedDay.date} {now} />
-			</div>
+			{#if viewMode === 'day'}
+				<div class="px-4 pb-24 pt-2">
+					<h2 class="mb-3 font-display text-sm font-semibold uppercase tracking-wide text-ink/50 dark:text-ink-dark/50">
+						{formatDayLabel(selectedDay.date)}
+					</h2>
+					<DayTimeline events={selectedDay.events} day={selectedDay.date} {now} />
+				</div>
+			{:else}
+				<div class="pb-24 pt-2">
+					<h2 class="mb-3 px-4 font-display text-sm font-semibold uppercase tracking-wide text-ink/50 dark:text-ink-dark/50">
+						Semaine du {formatDayShort(currentWeekDays[0]?.date)}
+					</h2>
+					<WeekTimeline days={currentWeekDays} {now} />
+				</div>
+			{/if}
 
 			<Footer compact {fetchedAt} />
 
-			<div class="fixed inset-x-0 bottom-0 border-t border-lilac/30 bg-white/95 p-4 backdrop-blur dark:border-lilac-dark/20 dark:bg-surface-dark/95">
+			<div class="fixed inset-x-0 z-30 bottom-0 border-t border-lilac/30 bg-white/95 p-4 backdrop-blur dark:border-lilac-dark/20 dark:bg-surface-dark/95">
 				<div class="mx-auto flex max-w-md items-center gap-3">
 					<button
-						onclick={goToPreviousDay}
-						disabled={selectedIndex <= 0}
-						class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
+						onclick={viewMode === 'day' ? goToPreviousDay : goToPreviousWeek}
+						disabled={viewMode === 'day' ? selectedIndex <= 0 : currentWeekDays[0]?.dateKey === days[0]?.dateKey}
+						class="flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-signal px-3 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
 					>
-						<FontAwesomeIcon icon={faArrowLeft} class="mx-1" /> Précédent
+						<FontAwesomeIcon icon={faArrowLeft} />
+						Précédent
 					</button>
 					<button
 						onclick={selectClosestToToday}
 						disabled={isOnToday}
 						aria-label="Revenir à aujourd'hui"
-						class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-signal font-display text-xs font-bold text-signal transition active:bg-signal active:text-mist disabled:cursor-not-allowed disabled:border-lilac/40 disabled:text-ink/30 "
+						class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border-2 border-signal font-display text-xs font-bold text-signal transition active:bg-signal active:text-mist disabled:cursor-not-allowed disabled:border-lilac/40 disabled:text-ink/30"
 					>
 						Auj.
 					</button>
 					<button
-						onclick={goToNextDay}
-						disabled={selectedIndex >= days.length - 1}
+						onclick={viewMode === 'day' ? goToNextDay : goToNextWeek}
+						disabled={viewMode === 'day' ? selectedIndex >= days.length - 1 : currentWeekDays[currentWeekDays.length - 1]?.dateKey === days[days.length - 1]?.dateKey}
 						class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
 					>
-						Suivant <FontAwesomeIcon icon={faArrowRight} class="mx-1" />
+						Suivant
+						<FontAwesomeIcon icon={faArrowRight} class="mx-1" />
 					</button>
 				</div>
 			</div>
