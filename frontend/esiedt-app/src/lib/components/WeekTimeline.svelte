@@ -6,7 +6,7 @@
 	let { days, now }: { days: DayGroup[]; now: Date } = $props();
 
 	const PX_PER_MIN = 1.4;
-	const COLUMN_WIDTH = 152;
+	const MIN_COLUMN_WIDTH = 152;
 	const HEADER_HEIGHT = 30;
 
 	let bounds = $derived(getWeekBounds(days));
@@ -43,7 +43,10 @@
 		{@const isToday = day.dateKey === todayKey}
 		{@const showNowLine =
 			isToday && nowMinutes >= bounds.startMinutes && nowMinutes <= bounds.endMinutes}
-		<div class="shrink-0 border-l border-lilac/20 dark:border-lilac-dark/10" style="width: {COLUMN_WIDTH}px">
+		<div
+			class="min-w-[152px] flex-1 shrink-0 border-l border-lilac/20 dark:border-lilac-dark/10"
+			style="max-width: none"
+		>
 			<div
 				class="sticky top-0 z-10 bg-mist text-center font-body text-xs font-semibold dark:bg-mist-dark"
 				style="height: {HEADER_HEIGHT}px; line-height: {HEADER_HEIGHT}px"
