@@ -190,5 +190,5 @@
 			</div>
 		{/if}
 	</div>
-	<DatePickerModal bind:open={showDatePicker} {days} onselect={(key) => (selectedKey = key)} />
+	<DatePickerModal bind:open={showDatePicker} days={displayDays} onselect={(key) => (selectedKey = key)} />
 {/if}
