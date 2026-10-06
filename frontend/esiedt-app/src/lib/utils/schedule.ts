@@ -104,7 +104,7 @@ export interface WeekGroup {
 	days: DayGroup[];
 }
 
-function getMondayKey(date: Date): string {
+export function getMondayKey(date: Date): string {
 	const d = new Date(date);
 	const dayOfWeek = d.getDay(); // 0 = dimanche, 1 = lundi, ...
 	const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
@@ -113,22 +113,28 @@ function getMondayKey(date: Date): string {
 }
 
 export function groupDaysByWeek(days: DayGroup[]): WeekGroup[] {
-	const map = new Map<string, DayGroup[]>();
+	// weekKey (date du lundi) -> { dateKey -> jour réel }
+	const map = new Map<string, Map<string, DayGroup>>();
 
 	for (const day of days) {
-		// On ne garde que Lundi (1) à Vendredi (5) — l'école est fermée le week-end
 		const dayOfWeek = day.date.getDay();
 		if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
 		const weekKey = getMondayKey(day.date);
-		if (!map.has(weekKey)) map.set(weekKey, []);
-		map.get(weekKey)!.push(day);
+		if (!map.has(weekKey)) map.set(weekKey, new Map());
+		map.get(weekKey)!.set(day.dateKey, day);
 	}
 
 	return Array.from(map.entries())
-		.map(([weekKey, weekDays]) => ({
-			weekKey,
-			days: weekDays.sort((a, b) => a.dateKey.localeCompare(b.dateKey))
-		}))
+		.map(([weekKey, byKey]) => {
+			const [y, m, d] = weekKey.split('-').map(Number);
+			const weekDays: DayGroup[] = [];
+			for (let i = 0; i < 5; i++) {
+				const date = new Date(y, m - 1, d + i);
+				const dateKey = toDateKey(date);
+				weekDays.push(byKey.get(dateKey) ?? { dateKey, date, events: [] });
+			}
+			return { weekKey, days: weekDays };
+		})
 		.sort((a, b) => a.weekKey.localeCompare(b.weekKey));
 }

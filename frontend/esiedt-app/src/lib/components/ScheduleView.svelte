@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { dev } from '$app/environment';
 	import { fetchSchedule } from '$lib/api';
-	import { groupEventsByDay, formatDayLabel, toDateKey, extractPromoName, groupDaysByWeek, formatDayShort, type DayGroup } from '$lib/utils/schedule';
+	import { groupEventsByDay, formatDayLabel, toDateKey, extractPromoName, getMondayKey, groupDaysByWeek, formatDayShort, type DayGroup } from '$lib/utils/schedule';
 	import DayNavigator from './DayNavigator.svelte';
 	import DayTimeline from './DayTimeline.svelte';
 	import Footer from './Footer.svelte';
@@ -36,8 +36,8 @@
 
 	function selectClosestToToday() {
 		const todayKey = toDateKey(now);
-		const upcoming = days.find((d) => d.dateKey >= todayKey);
-		selectedKey = upcoming ? upcoming.dateKey : (days[0]?.dateKey ?? '');
+		const upcoming = displayDays.find((d) => d.dateKey >= todayKey);
+		selectedKey = upcoming ? upcoming.dateKey : (displayDays[0]?.dateKey ?? '');
 	}
 
 	
@@ -66,41 +66,49 @@
 		}
 	}
 
-	let selectedDay = $derived(days.find((d) => d.dateKey === selectedKey));
-	let selectedIndex = $derived(days.findIndex((d) => d.dateKey === selectedKey));
+	let viewMode = $state<'day' | 'week'>('day');
+	let weeks = $derived(groupDaysByWeek(days));
+	
+	let displayDays = $derived(
+		[
+			...weeks.flatMap((w) => w.days),
+			...days.filter((d) => [0, 6].includes(d.date.getDay()))
+		].sort((a, b) => a.dateKey.localeCompare(b.dateKey))
+	);
+
+	let selectedDay = $derived(displayDays.find((d) => d.dateKey === selectedKey));
+	let selectedIndex = $derived(displayDays.findIndex((d) => d.dateKey === selectedKey));
 	let isOnToday = $derived(selectedKey === toDateKey(now));
 
 	function goToPreviousDay() {
-		if (selectedIndex > 0) selectedKey = days[selectedIndex - 1].dateKey;
+		if (selectedIndex > 0) selectedKey = displayDays[selectedIndex - 1].dateKey;
 	}
 	function goToNextDay() {
-		if (selectedIndex >= 0 && selectedIndex < days.length - 1)
-			selectedKey = days[selectedIndex + 1].dateKey;
+		if (selectedIndex >= 0 && selectedIndex < displayDays.length - 1)
+			selectedKey = displayDays[selectedIndex + 1].dateKey;
 	}
 
+	
 
-	let viewMode = $state<'day' | 'week'>('day');
+	let currentWeekIndex = $derived(
+		selectedDay ? weeks.findIndex((w) => w.weekKey === getMondayKey(selectedDay.date)) : -1
+	);
 
-	let currentWeekDays = $derived.by(() => {
-		if (!selectedDay) return [];
-		const weeks = groupDaysByWeek(days);
-		const week = weeks.find((w) => w.days.some((d) => d.dateKey === selectedKey));
-		return week?.days ?? [];
-	});
+	let currentWeekDays = $derived(weeks[currentWeekIndex]?.days ?? []);
+
+	
+	// Premier jour avec cours d'une semaine
+	function firstRealDayKey(weekIndex: number) {
+		const week = weeks[weekIndex];
+		return (week.days.find((d) => d.events.length > 0) ?? week.days[0]).dateKey;
+	}
 
 	function goToPreviousWeek() {
-		const weeks = groupDaysByWeek(days);
-		const currentWeekIndex = weeks.findIndex((w) => w.days.some((d) => d.dateKey === selectedKey));
-		if (currentWeekIndex > 0) {
-			selectedKey = weeks[currentWeekIndex - 1].days[0].dateKey;
-		}
+		if (currentWeekIndex > 0) selectedKey = firstRealDayKey(currentWeekIndex - 1);
 	}
 	function goToNextWeek() {
-		const weeks = groupDaysByWeek(days);
-		const currentWeekIndex = weeks.findIndex((w) => w.days.some((d) => d.dateKey === selectedKey));
-		if (currentWeekIndex >= 0 && currentWeekIndex < weeks.length - 1) {
-			selectedKey = weeks[currentWeekIndex + 1].days[0].dateKey;
-		}
+		if (currentWeekIndex >= 0 && currentWeekIndex < weeks.length - 1)
+			selectedKey = firstRealDayKey(currentWeekIndex + 1);
 	}
 </script>
 {#if loading}
@@ -116,7 +124,7 @@
 	<div class="min-h-screen bg-mist dark:bg-mist-dark">
 		<div class="flex items-start gap-2 px-4">
 			<div class="flex-1 overflow-hidden">
-				<DayNavigator {days} {selectedKey} onselect={(key) => (selectedKey = key)} />
+				<DayNavigator days={displayDays} {selectedKey} onselect={(key) => (selectedKey = key)} />
 			</div>
 			<button
 				onclick={() => (showDatePicker = true)}
@@ -156,7 +164,7 @@
 				<div class="mx-auto flex max-w-md items-center gap-3">
 					<button
 						onclick={viewMode === 'day' ? goToPreviousDay : goToPreviousWeek}
-						disabled={viewMode === 'day' ? selectedIndex <= 0 : currentWeekDays[0]?.dateKey === days[0]?.dateKey}
+						disabled={viewMode === 'day' ? selectedIndex <= 0 : currentWeekIndex <= 0}
 						class="flex flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-signal px-3 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
 					>
 						<FontAwesomeIcon icon={faArrowLeft} />
@@ -172,7 +180,7 @@
 					</button>
 					<button
 						onclick={viewMode === 'day' ? goToNextDay : goToNextWeek}
-						disabled={viewMode === 'day' ? selectedIndex >= days.length - 1 : currentWeekDays[currentWeekDays.length - 1]?.dateKey === days[days.length - 1]?.dateKey}
+						disabled={viewMode === 'day' ? selectedIndex >= displayDays.length - 1 : currentWeekIndex >= weeks.length - 1}
 						class="flex-1 rounded-lg bg-signal px-4 py-2.5 text-sm font-semibold text-mist shadow-sm transition active:bg-ink disabled:cursor-not-allowed disabled:bg-lilac/40 disabled:text-ink/40 disabled:shadow-none dark:disabled:bg-lilac-dark/10 dark:disabled:text-ink-dark/30"
 					>
 						Suivant
