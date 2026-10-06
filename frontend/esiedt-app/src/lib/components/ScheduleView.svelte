@@ -10,7 +10,7 @@
 	import { FontAwesomeIcon } from '@fortawesome/svelte-fontawesome';
 	import { faCalendarDays, faArrowLeft, faArrowRight, faTableCellsLarge, faCalendarDay} from '@fortawesome/free-solid-svg-icons';
 	import WeekTimeline from './WeekTimeline.svelte';
-
+	import { viewModeStore, toggleViewMode } from '$lib/stores/viewMode.svelte';
 	let { resourceId, groupName }: { resourceId: string; groupName: string } = $props();
 
 	let showDatePicker = $state(false);
@@ -65,8 +65,8 @@
 			loading = false;
 		}
 	}
-
-	let viewMode = $state<'day' | 'week'>('day');
+	
+	let viewMode = $derived(viewModeStore.mode);
 	let weeks = $derived(groupDaysByWeek(days));
 	
 	let displayDays = $derived(
@@ -134,7 +134,7 @@
 				<FontAwesomeIcon icon={faCalendarDays} />
 			</button>
 			<button
-				onclick={() => (viewMode = viewMode === 'day' ? 'week' : 'day')}
+				onclick={toggleViewMode}
 				aria-label={viewMode === 'day' ? 'Passer en vue semaine' : 'Passer en vue jour'}
 				class="mt-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-signal shadow-sm active:bg-lilac/30 dark:bg-surface-dark dark:active:bg-lilac-dark/20"
 			>
@@ -190,5 +190,5 @@
 			</div>
 		{/if}
 	</div>
-	<DatePickerModal bind:open={showDatePicker} {days} onselect={(key) => (selectedKey = key)} />
+	<DatePickerModal bind:open={showDatePicker} days={displayDays} onselect={(key) => (selectedKey = key)} />
 {/if}
