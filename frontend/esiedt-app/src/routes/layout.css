@@ -29,3 +29,7 @@ body {
 	background-color: var(--color-mist-dark);
 	color: var(--color-ink-dark);
 }
+
+:root {
+  color-scheme: dark;
+}
