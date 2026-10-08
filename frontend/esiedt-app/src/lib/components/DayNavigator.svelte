@@ -18,7 +18,7 @@
 	});
 </script>
 
-<div bind:this={container} class="flex gap-2 overflow-x-auto px-4 pb-2 pt-3">
+<div bind:this={container} class="flex gap-2 overflow-x-auto px-4 pb-2 pt-3 day-navigator">
 	{#each days as day (day.dateKey)}
 		<button
 			data-day-key={day.dateKey}
