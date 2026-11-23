@@ -22,6 +22,7 @@ load_dotenv()
 class MaintenanceAnnouncement(BaseModel):
     starts_at: dt
     ends_at: dt
+    type: int
 
 # -- Global variables --
 CATEGORY_ORDER = [
@@ -166,6 +167,26 @@ def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
 
 MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 
+
+def apply_maintenance(announcement: MaintenanceAnnouncement | None):
+    global MAINTENANCE_ANNOUNCEMENT
+    MAINTENANCE_ANNOUNCEMENT = announcement
+    save_maintenance_to_disk(announcement)
+
+
+def set_ade_outdated_maintenance():
+    """Affiche le bandeau 'ADE obsolète' (type 2), sans écraser une annonce existante."""
+    if MAINTENANCE_ANNOUNCEMENT is not None:
+        return
+    now = dt.now(timezone.utc)
+    apply_maintenance(MaintenanceAnnouncement(starts_at=now, ends_at=now + timedelta(days=1), type=2))
+
+
+def clear_ade_outdated_maintenance():
+    """Retire le bandeau 'ADE obsolète' (type 2) quand ADE répond à nouveau."""
+    if MAINTENANCE_ANNOUNCEMENT is not None and MAINTENANCE_ANNOUNCEMENT.type == 2:
+        apply_maintenance(None)
+
 app = FastAPI(title="EsiEDT")
 
 # -- CORS config --
@@ -198,6 +219,7 @@ async def get_schedule(resource_id: str):
 
     if cached and (now - cached["fetched_at"]) < CACHE_DURATION_SECONDS:
         return cached['data']
+    
 
     # ICS local
     if FIXTURE_MODE:
@@ -231,6 +253,8 @@ async def get_schedule(resource_id: str):
             elif response.status_code != 200:
                 print(f"Erreur ADE: {response.status_code} - {response.text}")
                 if cached:
+                    if (now - cached["fetched_at"]) > 60*60*24:
+                        set_ade_outdated_maintenance()
                     return cached["data"]
                 raise HTTPException(status_code=502, detail="ADE est encore en panne :(")
             
@@ -246,7 +270,8 @@ async def get_schedule(resource_id: str):
             }
 
             LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
-            return result 
+            clear_ade_outdated_maintenance()
+            return result
 
         except httpx.RequestError:
             if cached:
@@ -425,16 +450,12 @@ async def daily_refresh_loop():
 
 @app.post("/api/maintenance/")
 async def set_maintenance(announcement: MaintenanceAnnouncement, _=Depends(verify_admin)):
-    global MAINTENANCE_ANNOUNCEMENT
-    MAINTENANCE_ANNOUNCEMENT = announcement
-    save_maintenance_to_disk(announcement)
+    apply_maintenance(announcement)
     return {"status": "set", "announcement": announcement}
 
 @app.delete("/api/maintenance")
 async def delete_maintenance(_=Depends(verify_admin)):
-    global MAINTENANCE_ANNOUNCEMENT
-    MAINTENANCE_ANNOUNCEMENT = None
-    save_maintenance_to_disk(None)
+    apply_maintenance(None)
     return {"status": "removed"}
 
 @app.get('/api/maintenance')
