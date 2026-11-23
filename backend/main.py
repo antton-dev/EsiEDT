@@ -22,7 +22,7 @@ load_dotenv()
 class MaintenanceAnnouncement(BaseModel):
     starts_at: dt
     ends_at: dt
-    type: int
+    cat: int
 
 # -- Global variables --
 CATEGORY_ORDER = [
@@ -179,12 +179,12 @@ def set_ade_outdated_maintenance():
     if MAINTENANCE_ANNOUNCEMENT is not None:
         return
     now = dt.now(timezone.utc)
-    apply_maintenance(MaintenanceAnnouncement(starts_at=now, ends_at=now + timedelta(days=1), type=2))
+    apply_maintenance(MaintenanceAnnouncement(starts_at=now, ends_at=now + timedelta(days=1), cat=2))
 
 
 def clear_ade_outdated_maintenance():
     """Retire le bandeau 'ADE obsolète' (type 2) quand ADE répond à nouveau."""
-    if MAINTENANCE_ANNOUNCEMENT is not None and MAINTENANCE_ANNOUNCEMENT.type == 2:
+    if MAINTENANCE_ANNOUNCEMENT is not None and MAINTENANCE_ANNOUNCEMENT.cat == 2:
         apply_maintenance(None)
 
 app = FastAPI(title="EsiEDT")
@@ -253,7 +253,7 @@ async def get_schedule(resource_id: str):
             elif response.status_code != 200:
                 print(f"Erreur ADE: {response.status_code} - {response.text}")
                 if cached:
-                    if (now - cached["fetched_at"]) > 60*60*24:
+                    if (now - cached["fetched_at"]) > 60*60*12:
                         set_ade_outdated_maintenance()
                     return cached["data"]
                 raise HTTPException(status_code=502, detail="ADE est encore en panne :(")
