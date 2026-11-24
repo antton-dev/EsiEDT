@@ -5,3 +5,4 @@ backend/ADECal.ics
 backend/daily-refresh.log
 backend/logs
 .env
+backend/data

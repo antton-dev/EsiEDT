@@ -12,6 +12,7 @@ import json
 import re
 from datetime import datetime, timezone, timedelta
 import asyncio
+import hashlib
 import logging
 from pydantic import BaseModel
 from fastapi import Header, Depends
@@ -50,7 +51,9 @@ FIXTURE_ICS_PATH = "ADECal.ics"
 
 
 MAINTENANCE_FILE = "data/maintenance.json"
+CACHE_DIR = "data/cache"
 os.makedirs("data", exist_ok=True)
+os.makedirs(CACHE_DIR, exist_ok=True)
 # -- BDD des groupes --
 try: 
     with open("resources.json", "r", encoding="utf-8") as f:
@@ -168,6 +171,48 @@ def load_maintenance_from_disk() -> MaintenanceAnnouncement | None:
 MAINTENANCE_ANNOUNCEMENT: MaintenanceAnnouncement | None = load_maintenance_from_disk()
 
 
+# -- Cache persistant --
+def _cache_path(resource_id: str) -> str:
+    # resource_id vient de l'URL : on le hash pour un nom de fichier sûr
+    digest = hashlib.sha256(resource_id.encode("utf-8")).hexdigest()
+    return os.path.join(CACHE_DIR, f"{digest}.json")
+
+
+def save_cache_entry(resource_id: str, entry: dict):
+    path = _cache_path(resource_id)
+    tmp_path = f"{path}.tmp"
+    try:
+        with open(tmp_path, "w", encoding="utf-8") as f:
+            json.dump({"resource_id": resource_id, **entry}, f, ensure_ascii=False)
+        os.replace(tmp_path, path)
+    except Exception as e:
+        print(f"Erreur écriture cache {resource_id}: {e}")
+
+
+def load_cache_from_disk() -> dict[str, dict]:
+    cache: dict[str, dict] = {}
+    for filename in os.listdir(CACHE_DIR):
+        if not filename.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(CACHE_DIR, filename), "r", encoding="utf-8") as f:
+                entry = json.load(f)
+            cache[entry["resource_id"]] = {"data": entry["data"], "fetched_at": entry["fetched_at"]}
+        except Exception as e:
+            print(f"Erreur lecture cache {filename}: {e}")
+    print(f"{len(cache)} entrées de cache chargées depuis le disque")
+    return cache
+
+
+LAST_GOOD_RESPONSE.update(load_cache_from_disk())
+
+
+def set_cache_entry(resource_id: str, data: dict, fetched_at: float):
+    entry = {"data": data, "fetched_at": fetched_at}
+    LAST_GOOD_RESPONSE[resource_id] = entry
+    save_cache_entry(resource_id, entry)
+
+
 def apply_maintenance(announcement: MaintenanceAnnouncement | None):
     global MAINTENANCE_ANNOUNCEMENT
     MAINTENANCE_ANNOUNCEMENT = announcement
@@ -234,7 +279,7 @@ async def get_schedule(resource_id: str):
             "fetched_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat(),
             "events": structured_data
         }
-        LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
+        set_cache_entry(resource_id, result, now)
         return result
 
 
@@ -269,7 +314,7 @@ async def get_schedule(resource_id: str):
                 "events": structured_data
             }
 
-            LAST_GOOD_RESPONSE[resource_id] = {"data": result, "fetched_at": now}
+            set_cache_entry(resource_id, result, now)
             clear_ade_outdated_maintenance()
             return result
 
